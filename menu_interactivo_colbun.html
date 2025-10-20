@@ -43,18 +43,31 @@
     background-color: #e9eff3;
     width: 38%;
     padding: 20px;
+    overflow-y: auto;
   }
   .submenu h3 {
     color: #0072bb;
+    margin-bottom: 10px;
   }
   .submenu a {
     display: block;
     color: #0072bb;
     text-decoration: none;
     margin-bottom: 8px;
+    font-size: 15px;
   }
   .submenu a:hover {
     text-decoration: underline;
+  }
+  .descripcion {
+    font-size: 14px;
+    color: #0072bb;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .descripcion.visible {
+    opacity: 1;
   }
 
   /* Panel derecho */
@@ -69,6 +82,11 @@
     height: auto;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .imagen img.visible {
+    opacity: 1;
   }
 </style>
 </head>
@@ -90,11 +108,15 @@
   <a href="https://experience.arcgis.com/experience/63b92e386bc042feaffc945ecd0d0bd2" target="_blank">Aplicativo Web Completo</a>
   <a href="https://experience.arcgis.com/experience/9edc1cf65df04b5fa3a0f5f81859fda9" target="_blank">Aplicativo Web para Editar</a>
   <a href="https://www.arcgis.com/apps/dashboards/82fb3d1991fa4d45854a7eafacb90bf7" target="_blank">Visualizador o Cuadro de Mando</a>
+  <div id="descripcion" class="descripcion visible">
+    Aplicativo SIG que centraliza toda la información territorial y predial del proyecto Loica Portezuelo. 
+    Permite visualizar infraestructura, predios y servidumbres, editar atributos y analizar avances mediante un cuadro de mando.
+  </div>
 </div>
 
 <div class="imagen" id="imagen">
   <h3>Proyecto Loica Portezuelo</h3>
-  <img src="image2/loica.png" alt="Proyecto Loica Portezuelo">
+  <img src="image2/loica.png" alt="Proyecto Loica Portezuelo" class="visible">
 </div>
 
 <script>
@@ -103,8 +125,9 @@ function mostrar(opcion) {
   botones.forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
 
-  let contenido = '';
   let titulo = '';
+  let contenido = '';
+  let descripcion = '';
   let imagen = '';
 
   switch(opcion) {
@@ -114,7 +137,8 @@ function mostrar(opcion) {
         <a href="https://experience.arcgis.com/experience/63b92e386bc042feaffc945ecd0d0bd2" target="_blank">Aplicativo Web Completo</a>
         <a href="https://experience.arcgis.com/experience/9edc1cf65df04b5fa3a0f5f81859fda9" target="_blank">Aplicativo Web para Editar</a>
         <a href="https://www.arcgis.com/apps/dashboards/82fb3d1991fa4d45854a7eafacb90bf7" target="_blank">Visualizador o Cuadro de Mando</a>`;
-      imagen = "image2/loica.png";
+      descripcion = 'Aplicativo SIG que centraliza toda la información territorial y predial del proyecto Loica Portezuelo. Permite visualizar infraestructura, predios y servidumbres, editar atributos y analizar avances mediante un cuadro de mando.';
+      imagen = 'image2/loica.png';
       break;
 
     case 'cuatrovientos':
@@ -123,7 +147,8 @@ function mostrar(opcion) {
         <a href="https://experience.arcgis.com/experience/7ac34be3b87f4417a94b4f380e759fd6" target="_blank">Aplicativo Web Completo</a>
         <a href="https://experience.arcgis.com/experience/8d70ffde1d194cd6a274738bd24c36c1" target="_blank">Aplicativo Web para Editar</a>
         <a href="https://www.arcgis.com/apps/dashboards/55d9d5da3b784578b79729f9a09bebf6" target="_blank">Visualizador o Cuadro de Mando</a>`;
-      imagen = "image2/cuatrovientos.png";
+      descripcion = 'Plataforma web que gestiona los datos territoriales del proyecto Cuatro Viento. Permite consultar y editar información de terrenos y servidumbres, y supervisar avances mediante dashboards.';
+      imagen = 'image2/cuatrovientos.png';
       break;
 
     case 'arriendo':
@@ -131,14 +156,16 @@ function mostrar(opcion) {
       contenido = `
         <a href="https://experience.arcgis.com/experience/fc133609fa6f41b1a52004826dc7b9fa" target="_blank">Editor Web de BBDD Arriendos</a>
         <a href="https://colbun.maps.arcgis.com/home/item.html?id=3cd846063dbc43178ea2157d6036f04a" target="_blank">Visualizador</a>`;
-      imagen = "image2/arriendo.png";
+      descripcion = 'Herramienta de gestión de arriendos georreferenciados. Permite editar y mantener actualizada la base de datos de arriendos, consultar ubicaciones y estado de contratos.';
+      imagen = 'image2/arriendo.png';
       break;
 
     case 'patrimonio':
       titulo = 'Aplicativo SIG Solicitud de Actualización de BBDD Patrimonio';
       contenido = `
         <a href="https://experience.arcgis.com/experience/4d375d01ad7c4b8d87ac6b12a64c6521" target="_blank">Aplicativo Web</a>`;
-      imagen = "image2/patrimonio.png";
+      descripcion = 'Aplicativo orientado a solicitar y registrar cambios en la base patrimonial de terrenos. Permite enviar solicitudes de actualización con respaldo espacial y mantener actualizada la BBDD patrimonial.';
+      imagen = 'image2/patrimonio.png';
       break;
 
     case 'terreno':
@@ -146,26 +173,37 @@ function mostrar(opcion) {
       contenido = `
         <a href="https://experience.arcgis.com/experience/f1eac2ac84b84012b447bdd0e3f5e4ad" target="_blank">Aplicativo Web Actual</a>
         <a href="https://experience.arcgis.com/experience/f79cfa2f21dd4b92b469478de6a55663" target="_blank">Aplicativo Web Beta</a>`;
-      imagen = "image2/terreno.png";
+      descripcion = 'Portal corporativo que consolida la información de terrenos y servidumbres. Permite consultar capas geográficas integradas con bases legales y técnicas.';
+      imagen = 'image2/terreno.png';
       break;
 
     case 'arquitectura':
       titulo = 'Arquitectura SIG';
       contenido = `
         <a href="https://gis.colbunsa.cl/portal/apps/sites/#/geportal-patrimonio" target="_blank">Geoportal versión Beta</a>`;
-      imagen = "image2/arquitectura.png";
+      descripcion = 'Geoportal institucional que centraliza los recursos, aplicaciones y servicios geoespaciales de la Subgerencia de Gestión de Patrimonio. Permite acceso unificado a aplicativos y servicios SIG.';
+      imagen = 'image2/arquitectura.png';
       break;
 
     case 'explorador':
       titulo = 'Explorador de Imágenes';
       contenido = `
         <a href="https://livingatlas.arcgis.com/sentinel2explorer/#mapCenter=-69.28113%2C-35.55360%2C5.195&mode=find+a+scene&mainScene=2025-04-12%7CNatural+Color+for+Visualization%7C41411138" target="_blank">Aplicativo Web</a>`;
-      imagen = "image2/explorador.png";
+      descripcion = 'Aplicativo basado en Sentinel-2 que permite explorar y analizar imágenes satelitales históricas y recientes, útil para monitoreo y análisis SIG.';
+      imagen = 'image2/explorador.png';
       break;
   }
 
-  document.getElementById('submenu').innerHTML = `<h3>${titulo}</h3>${contenido}`;
-  document.getElementById('imagen').innerHTML = `<h3>${titulo}</h3><img src="${imagen}" alt="${titulo}">`;
+  const sub = document.getElementById('submenu');
+  const img = document.getElementById('imagen');
+
+  sub.innerHTML = `<h3>${titulo}</h3>${contenido}<div id='descripcion' class='descripcion'>${descripcion}</div>`;
+  img.innerHTML = `<h3>${titulo}</h3><img src='${imagen}' alt='${titulo}'>`;
+
+  setTimeout(() => {
+    document.getElementById('descripcion').classList.add('visible');
+    document.querySelector('.imagen img').classList.add('visible');
+  }, 10);
 }
 </script>
 
