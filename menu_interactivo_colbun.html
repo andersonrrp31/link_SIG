@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú Interactivo Colbún</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f4f6f7;
+    color: #333;
+  }
+
+  .contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+  }
+
+  /* Menú principal */
+  .menu {
+    width: 25%;
+    background-color: #0072bb;
+    color: white;
+    padding: 20px;
+  }
+
+  .menu h2 {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #e6f3fb;
+  }
+
+  .menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background 0.3s;
+  }
+
+  .menu a:hover, .menu a.active {
+    background-color: #6ab43e;
+  }
+
+  /* Submenú */
+  .submenu {
+    width: 35%;
+    background-color: #e9eef1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .submenu a {
+    display: block;
+    color: #0072bb;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 8px 0;
+  }
+
+  .submenu a:hover {
+    color: #6ab43e;
+  }
+
+  /* Contenido / imagen */
+  .contenido {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+  }
+
+  .contenido img {
+    width: 90%;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    transition: opacity 0.3s ease;
+  }
+
+  h3 {
+    color: #0072bb;
+    margin-top: 15px;
+  }
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+  <!-- MENÚ IZQUIERDO -->
+  <div class="menu">
+    <h2>Colbún · SIG</h2>
+    <a href="#" class="active" onclick="mostrar('loica', event)">Proyecto Loica Portezuelo</a>
+    <a href="#" onclick="mostrar('cuatro', event)">Proyecto Cuatro Viento</a>
+    <a href="#" onclick="mostrar('arriendo', event)">Aplicativo SIG de Arriendo</a>
+    <a href="#" onclick="mostrar('patrimonio', event)">Actualización BBDD Patrimonio</a>
+    <a href="#" onclick="mostrar('terrenos', event)">Portal de Terrenos y Servidumbres</a>
+    <a href="#" onclick="mostrar('arquitectura', event)">Arquitectura SIG</a>
+    <a href="#" onclick="mostrar('imagenes', event)">Explorador de Imágenes</a>
+  </div>
+
+  <!-- SUBMENÚ CENTRAL -->
+  <div class="submenu" id="submenu">
+    <h3>Proyecto Loica Portezuelo</h3>
+    <a target="_blank" href="https://experience.arcgis.com/experience/63b92e386bc042feaffc945ecd0d0bd2">Aplicativo Web Completo</a>
+    <a target="_blank" href="https://experience.arcgis.com/experience/9edc1cf65df04b5fa3a0f5f81859fda9">Aplicativo Web para Editar</a>
+    <a target="_blank" href="https://www.arcgis.com/apps/dashboards/82fb3d1991fa4d45854a7eafacb90bf7">Visualizador o Cuadro de Mando</a>
+  </div>
+
+  <!-- IMAGEN DERECHA -->
+  <div class="contenido">
+    <img id="imagen" src="https://www.arcgis.com/sharing/rest/content/items/f2f6a1c9e1404037b3027857e677bec6/info/thumbnail/thumbnail.png" alt="Vista Loica">
+    <h3 id="titulo">Proyecto Loica Portezuelo</h3>
+  </div>
+</div>
+
+<script>
+const data = {
+  loica: {
+    titulo: "Proyecto Loica Portezuelo",
+    imagen: "https://www.arcgis.com/sharing/rest/content/items/f2f6a1c9e1404037b3027857e677bec6/info/thumbnail/thumbnail.png",
+    links: [
+      ["Aplicativo Web Completo","https://experience.arcgis.com/experience/63b92e386bc042feaffc945ecd0d0bd2"],
+      ["Aplicativo Web para Editar","https://experience.arcgis.com/experience/9edc1cf65df04b5fa3a0f5f81859fda9"],
+      ["Visualizador o Cuadro de Mando","https://www.arcgis.com/apps/dashboards/82fb3d1991fa4d45854a7eafacb90bf7"]
+    ]
+  },
+  cuatro: {
+    titulo: "Proyecto Cuatro Viento",
+    imagen: "https://www.arcgis.com/sharing/rest/content/items/ea02d8ff8a8f45d0ae27d3d242c0a0d6/info/thumbnail/thumbnail.png",
+    links: [
+      ["Aplicativo Web Completo","https://experience.arcgis.com/experience/7ac34be3b87f4417a94b4f380e759fd6"],
+      ["Aplicativo Web para Editar","https://experience.arcgis.com/experience/8d70ffde1d194cd6a274738bd24c36c1"],
+      ["Visualizador o Cuadro de Mando","https://www.arcgis.com/apps/dashboards/55d9d5da3b784578b79729f9a09bebf6"]
+    ]
+  },
+  arriendo: {
+    titulo: "Aplicativo SIG de Arriendo",
+    imagen: "https://www.arcgis.com/sharing/rest/content/items/9e84948db2e0468ab34c66433b76cbcf/info/thumbnail/thumbnail.png",
+    links: [
+      ["Editor Web de BBDD Arriendos","https://experience.arcgis.com/experience/fc133609fa6f41b1a52004826dc7b9fa"],
+      ["Visualizador","https://colbun.maps.arcgis.com/home/item.html?id=3cd846063dbc43178ea2157d6036f04a"]
+    ]
+  },
+  patrimonio: {
+    titulo: "Actualización BBDD Patrimonio",
+    imagen: "https://www.arcgis.com/sharing/rest/content/items/f523d7348c4a488ca0ce59ff22113923/info/thumbnail/thumbnail.png",
+    links: [
+      ["Aplicativo Web","https://experience.arcgis.com/experience/4d375d01ad7c4b8d87ac6b12a64c6521"]
+    ]
+  },
+  terrenos: {
+    titulo: "Portal de Terrenos y Servidumbres",
+    imagen: "https://www.arcgis.com/sharing/rest/content/items/03e7e8ac93be431aa168ce983c947bb0/info/thumbnail/thumbnail.png",
+    links: [
+      ["Aplicativo Web Actual","https://experience.arcgis.com/experience/f1eac2ac84b84012b447bdd0e3f5e4ad"],
+      ["Aplicativo Web Beta","https://experience.arcgis.com/experience/f79cfa2f21dd4b92b469478de6a55663"]
+    ]
+  },
+  arquitectura: {
+    titulo: "Arquitectura SIG",
+    imagen: "https://www.arcgis.com/sharing/rest/content/items/0944f1e3e01e492d9338fd2653a76292/info/thumbnail/thumbnail.png",
+    links: [
+      ["Geoportal versión beta","https://gis.colbunsa.cl/portal/apps/sites/#/geportal-patrimonio"]
+    ]
+  },
+  imagenes: {
+    titulo: "Explorador de Imágenes",
+    imagen: "https://www.arcgis.com/sharing/rest/content/items/de0c0b7b955e40f3a5a06f966f5cd9d4/info/thumbnail/thumbnail.png",
+    links: [
+      ["Aplicativo Web","https://livingatlas.arcgis.com/sentinel2explorer/#mapCenter=-69.28113%2C-35.55360%2C5.195&mode=find+a+scene&mainScene=2025-04-12%7CNatural+Color+for+Visualization%7C41411138"]
+    ]
+  }
+};
+
+function mostrar(key, e) {
+  e.preventDefault();
+  document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+  e.target.classList.add('active');
+  const item = data[key];
+  const submenu = document.getElementById('submenu');
+  const imagen = document.getElementById('imagen');
+  const titulo = document.getElementById('titulo');
+
+  submenu.innerHTML = `<h3>${item.titulo}</h3>` + item.links.map(l => `<a target="_blank" href="${l[1]}">${l[0]}</a>`).join('');
+  imagen.style.opacity = 0;
+  setTimeout(() => {
+    imagen.src = item.imagen;
+    titulo.textContent = item.titulo;
+    imagen.style.opacity = 1;
+  }, 200);
+}
+</script>
+
+</body>
+</html>
