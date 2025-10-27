@@ -94,13 +94,14 @@
 
 <div class="menu">
   <h2>Colbún · SIG</h2>
-  <button onclick="mostrar('loica')" class="active">Proyecto Loica Portezuelo</button>
-  <button onclick="mostrar('cuatrovientos')">Proyecto Cuatro Viento</button>
-  <button onclick="mostrar('arriendo')">Aplicativo SIG de Arriendo</button>
-  <button onclick="mostrar('patrimonio')">Actualización BBDD Patrimonio</button>
-  <button onclick="mostrar('terreno')">Portal de Terrenos y Servidumbres</button>
-  <button onclick="mostrar('arquitectura')">Arquitectura SIG</button>
-  <button onclick="mostrar('explorador')">Explorador de Imágenes</button>
+  <button onclick="mostrar.call(this, 'loica')" class="active">Proyecto Loica Portezuelo</button>
+  <button onclick="mostrar.call(this, 'cuatrovientos')">Proyecto Cuatro Viento</button>
+  <button onclick="mostrar.call(this, 'arriendo')">Aplicativo SIG de Arriendo</button>
+  <button onclick="mostrar.call(this, 'concesiones')">Aplicativo SIG de Concesiones Mineras</button>
+  <button onclick="mostrar.call(this, 'patrimonio')">Actualización BBDD Patrimonio</button>
+  <button onclick="mostrar.call(this, 'terreno')">Portal de Terrenos y Servidumbres</button>
+  <button onclick="mostrar.call(this, 'arquitectura')">Arquitectura SIG</button>
+  <button onclick="mostrar.call(this, 'explorador')">Explorador de Imágenes</button>
 </div>
 
 <div class="submenu" id="submenu">
@@ -158,6 +159,14 @@ function mostrar(opcion) {
         <a href="https://colbun.maps.arcgis.com/home/item.html?id=3cd846063dbc43178ea2157d6036f04a" target="_blank">Visualizador</a>`;
       descripcion = 'Herramienta de gestión de arriendos georreferenciados. Permite editar y mantener actualizada la base de datos de arriendos, consultar ubicaciones y estado de contratos.';
       imagen = 'image2/arriendo.png';
+      break;
+
+    case 'concesiones':
+      titulo = 'Aplicativo SIG de Concesiones Mineras';
+      contenido = `
+        <a href="https://colbun.maps.arcgis.com/apps/dashboards/b2c33b0fb9994c738565e3db13bb5c37" target="_blank">Visualizador de Concesiones Mineras</a>`;
+      descripcion = 'Aplicativo SIG que consolida la información geográfica de las concesiones mineras pertenecientes al patrimonio de Colbún. Permite visualizar los polígonos asociados a permisos y concesiones mineras vigentes, de acuerdo con la normativa chilena, facilitando el seguimiento y gestión de estos derechos dentro del territorio nacional.';
+      imagen = 'image2/Concesiones.png';
       break;
 
     case 'patrimonio':
