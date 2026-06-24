@@ -11,7 +11,6 @@
     display: flex;
     height: 100vh;
   }
-  
   /* Panel izquierdo */
   .menu {
     background-color: #0072bb;
@@ -50,54 +49,51 @@
   }
   .submenu h3 {
     color: #0072bb;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
   
-  /* --- AQUI ESTA LA MEJORA VISUAL DE LOS ENLACES --- */
+  /* --- BOTONES DE ENLACE (NUEVO DISEÑO PARA RESALTAR) --- */
   .submenu a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: white;
-    color: #0072bb;
-    text-decoration: none;
-    margin-bottom: 10px;
-    padding: 12px 15px;
+    background-color: #6ab43e; /* Fondo verde sólido */
+    color: white !important; /* Texto blanco forzado */
+    text-decoration: none !important; /* Elimina el subrayado */
+    padding: 12px 18px;
+    margin-bottom: 12px;
+    border-radius: 6px;
     font-size: 15px;
     font-weight: bold;
-    border-left: 5px solid #0072bb;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-  }
-  .submenu a:hover {
-    background-color: #0072bb;
-    color: white;
-    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transition: all 0.2s ease-in-out;
   }
   
-  /* El botón falso de "Clic aquí" */
+  .submenu a:hover {
+    background-color: #559132; /* Verde más oscuro al pasar el cursor */
+    transform: translateY(-2px); /* Pequeño salto hacia arriba */
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  }
+  
+  /* Etiqueta de "Abrir" a la derecha */
   .submenu a::after {
-    content: 'Clic aquí ↗';
-    font-size: 12px;
-    font-weight: normal;
-    background-color: #6ab43e;
+    content: 'Abrir ↗';
+    background-color: rgba(255,255,255,0.25); /* Fondo semitransparente blanco */
     color: white;
-    padding: 5px 10px;
-    border-radius: 15px;
-    transition: all 0.3s ease;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-left: 10px;
   }
-  .submenu a:hover::after {
-    background-color: white;
-    color: #0072bb;
-  }
-  /* ------------------------------------------------ */
+  /* -------------------------------------------------------- */
 
   .descripcion {
     font-size: 14px;
     color: #333;
-    line-height: 1.5;
-    margin-top: 15px;
+    line-height: 1.6;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #d1d9e0; /* Una sutil línea separadora */
     opacity: 0;
     transition: opacity 0.5s ease;
   }
