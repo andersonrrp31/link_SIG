@@ -11,7 +11,6 @@
     display: flex;
     height: 100vh;
   }
-  
   /* Panel izquierdo */
   .menu {
     background-color: #0072bb;
@@ -48,60 +47,22 @@
   }
   .submenu h3 {
     color: #0072bb;
-    margin-bottom: 15px;
-    font-size: 20px;
+    margin-bottom: 10px;
   }
-  
-  /* --- NUEVO ESTILO DE BOTONES PARA LOS LINKS --- */
   .submenu a {
-    display: flex;
-    justify-content: space-between; /* Separa el texto del botón "clic aquí" */
-    align-items: center;
-    background-color: #ffffff;
+    display: block;
     color: #0072bb;
     text-decoration: none;
-    margin-bottom: 12px;
-    padding: 12px 15px;
+    margin-bottom: 8px;
     font-size: 15px;
-    font-weight: bold;
-    border-left: 5px solid #0072bb; /* Línea decorativa a la izquierda */
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
   }
-
-  /* Efecto al pasar el mouse por encima */
   .submenu a:hover {
-    background-color: #0072bb;
-    color: #ffffff;
-    transform: translateY(-2px); /* Pequeño salto hacia arriba */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    text-decoration: underline;
   }
-
-  /* Etiqueta automática de "Clic aquí" a la derecha del enlace */
-  .submenu a::after {
-    content: 'Clic aquí ↗';
-    font-size: 12px;
-    font-weight: bold;
-    background-color: #6ab43e; /* Verde corporativo */
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  /* Invertir colores de la etiqueta al pasar el mouse */
-  .submenu a:hover::after {
-    background-color: #ffffff;
-    color: #0072bb;
-  }
-  /* ---------------------------------------------- */
-
   .descripcion {
-    font-size: 15px;
-    color: #444; 
-    line-height: 1.5;
-    margin-top: 15px;
+    font-size: 14px;
+    color: #0072bb;
+    margin-top: 10px;
     opacity: 0;
     transition: opacity 0.5s ease;
   }
@@ -256,7 +217,7 @@ function mostrar(opcion) {
       titulo = 'Visor de Análisis Territorial – Plan de Expansión TX (Cambrales · La Calle)';
       contenido = `
         <a href="https://experience.arcgis.com/experience/4737c661ad914a8891a2bd0cb8b4a3d1" target="_blank">Aplicativo Web</a>`;
-      descripcion = 'Visor GIS interno de Colbún diseñado para evaluar y seleccionar terrenos candidatos para las subestaciones Cambrales y La Calle dentro del Plan de Expansión de Transmisión 2026. Permite analizar información territorial, restricciones, oportunidades y antecedentes relevantes para apoyar la toma de decisiones en etapas tempranas del proyecto.';
+      descripcion = 'Visor GIS interno de Colbún diseñado para evaluar y seleccionar terrenos candidatos para las subestaciones Cambrales y La Calle dentro del Plan de Expansión de Transmisión 2026.  Permite analizar información territorial, restricciones, oportunidades y antecedentes relevantes para apoyar la toma de decisiones en etapas tempranas del proyecto.';
       imagen = 'image2/Plan_Expansion.png';
       break;
 
