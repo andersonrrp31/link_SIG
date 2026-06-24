@@ -104,6 +104,7 @@
   <button onclick="mostrar.call(this, 'explorador')">Explorador de Imágenes</button>
   <button onclick="mostrar.call(this, 'mariaelena')">Catastro Territorial María Elena - Inti Pacha</button>
   <button onclick="mostrar.call(this, 'planexpansion')">Visor de Análisis Territorial – Plan de Expansión TX</button>
+  <button onclick="mostrar.call(this, 'tareas_sgp')">Gestión de Tareas SGP Incidentes</button>
 </div>
 
 <div class="submenu" id="submenu">
@@ -203,6 +204,7 @@ function mostrar(opcion) {
       descripcion = 'Aplicativo basado en Sentinel-2 que permite explorar y analizar imágenes satelitales históricas y recientes, útil para monitoreo y análisis SIG.';
       imagen = 'image2/explorador.png';
       break;
+      
     case 'mariaelena':
       titulo = 'Catastro Territorial María Elena - Inti Pacha';
       contenido = `
@@ -210,12 +212,21 @@ function mostrar(opcion) {
       descripcion = 'Dashboard interactivo del Catastro Territorial Avanzado para los trazados LAT Inti Pacha - S/E Crucero e Inti Pacha - S/E Kimal, comuna de María Elena, Región de Antofagasta. Incluye 70 eventos territoriales: servidumbres inscritas, líneas de transmisión eléctrica, concesiones eléctricas, proyectos ingresados al SEA, actos administrativos de Bienes Nacionales y propiedad superficial. Estudio elaborado por Andes Datatec, mayo 2026. Subgerencia de Gestión de Patrimonio, Colbún S.A.';
       imagen = 'image2/Catastro_inti.png';
       break;
+      
     case 'planexpansion':
       titulo = 'Visor de Análisis Territorial – Plan de Expansión TX (Cambrales · La Calle)';
       contenido = `
         <a href="https://experience.arcgis.com/experience/4737c661ad914a8891a2bd0cb8b4a3d1" target="_blank">Aplicativo Web</a>`;
       descripcion = 'Visor GIS interno de Colbún diseñado para evaluar y seleccionar terrenos candidatos para las subestaciones Cambrales y La Calle dentro del Plan de Expansión de Transmisión 2026.  Permite analizar información territorial, restricciones, oportunidades y antecedentes relevantes para apoyar la toma de decisiones en etapas tempranas del proyecto.';
       imagen = 'image2/Plan_Expansion.png';
+      break;
+
+    case 'tareas_sgp':
+      titulo = 'Gestión de Tareas SGP Incidentes';
+      contenido = `
+        <a href="https://experience.arcgis.com/experience/42969c86dc8d44ed98235c430081f434/page/Gesti%C3%B3n-y-Avances" target="_blank">Aplicativo Web (Gestión y Avances)</a>`;
+      descripcion = 'El aplicativo Gestión de Tareas SGP Incidentes es una herramienta interna desarrollada para la Subgerencia de Gestión de Patrimonio (SGP) de Colbún, cuyo objetivo es registrar, gestionar, monitorear y dar seguimiento a incidentes territoriales asociados a las centrales de la compañía. Este sistema integra capacidades de visualización geográfica, gestión de datos y seguimiento de actividades, permitiendo centralizar la información en un solo entorno accesible para el equipo.';
+      imagen = 'image2/APP_Tareas_incidencias_SGP.png';
       break;
   }
 
