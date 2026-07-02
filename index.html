@@ -31,6 +31,15 @@
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.5) transparent;
+  }
+  .menu::-webkit-scrollbar {
+    width: 8px;
+  }
+  .menu::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 4px;
   }
   .menu h2 {
     text-align: center;
@@ -55,6 +64,18 @@
   }
   .menu button:hover, .menu button.active {
     background-color: #6ab43e;
+  }
+
+  /* === Compacta el menú en laptops de poca altura para que quepan más ítems antes de necesitar scroll === */
+  @media (max-height: 700px) {
+    .menu button {
+      padding: 6px 10px;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+    .menu h2 {
+      margin-bottom: 10px;
+    }
   }
 
   /* === Panel central === */
@@ -183,6 +204,7 @@
   <button onclick="mostrar.call(this, 'mariaelena')">Catastro Territorial María Elena - Inti Pacha</button>
   <button onclick="mostrar.call(this, 'planexpansion')">Visor de Análisis Territorial – Plan de Expansión TX</button>
   <button onclick="mostrar.call(this, 'tareas_sgp')">Gestión de Tareas SGP Incidentes</button>
+  <button onclick="mostrar.call(this, 'control_tareas_sgp')">Control de Tareas SGP</button>
 </div>
 
 <div class="submenu" id="submenu">
@@ -305,6 +327,15 @@ function mostrar(opcion) {
         <a href="https://experience.arcgis.com/experience/42969c86dc8d44ed98235c430081f434/page/Gesti%C3%B3n-y-Avances" target="_blank">Aplicativo Web (Gestión y Avances)</a>`;
       descripcion = 'El aplicativo Gestión de Tareas SGP Incidentes es una herramienta interna desarrollada para la Subgerencia de Gestión de Patrimonio (SGP) de Colbún, cuyo objetivo es registrar, gestionar, monitorear y dar seguimiento a incidentes territoriales asociados a las centrales de la compañía. Este sistema integra capacidades de visualización geográfica, gestión de datos y seguimiento de actividades, permitiendo centralizar la información en un solo entorno accesible para el equipo.';
       imagen = 'image2/APP_Tareas_incidencias_SGP.png';
+      break;
+
+    case 'control_tareas_sgp':
+      titulo = 'Control de Tareas SGP';
+      contenido = `
+        <a href="https://apps.powerapps.com/play/e/default-f402c82d-b1a3-4983-a2cc-d490bb898cb6/a/dce5dcec-7f78-4dd2-b84f-4e1671d73eab?tenantId=f402c82d-b1a3-4983-a2cc-d490bb898cb6" target="_blank">🎯 Abrir Power App</a>
+        <a href="https://app.powerbi.com/links/b-0rJ3qcBV?ctid=f402c82d-b1a3-4983-a2cc-d490bb898cb6&pbi_source=linkShare&bookmarkGuid=aa5757d3-619b-4c0b-b73f-d864c8c3737d" target="_blank">📊 Dashboard Power BI</a>`;
+      descripcion = 'Sistema Control de Tareas SGP - la solución integral del equipo de Terrenos y Concesiones. Gestiona todo el ciclo de tareas: asignación, seguimiento, aprobación y cierre, con bitácora personal por tarea, generación de PDF profesional, notificaciones inteligentes y dashboard analítico.';
+      imagen = 'image2/control_tareas_sgp.png';
       break;
   }
 
