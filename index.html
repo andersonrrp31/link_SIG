@@ -529,12 +529,8 @@ const MESA = {
   desc: 'Registro histórico de las reuniones de la Mesa de Incidentes (instancias gerenciales G1 y G2). Por cada sesión se publica un StoryMap con el estado territorial de los incidentes y una minuta en PDF almacenada en SharePoint.',
   carpetaMinutas: '',   // Link a la biblioteca SharePoint de minutas (opcional)
   reuniones: [
-    // TODO: reemplazar con las fechas y links reales de cada sesión
-    { fecha: '2026-11-12', tipo: 'G1', storymap: '', minuta: '' },
-    { fecha: '2026-11-05', tipo: 'G2', storymap: '', minuta: '' },
-    { fecha: '2026-10-15', tipo: 'G1', storymap: '', minuta: '' },
-    { fecha: '2026-10-08', tipo: 'G2', storymap: '', minuta: '' },
-    { fecha: '2026-09-17', tipo: 'G1', storymap: '', minuta: '' }
+    { fecha: '2026-11-12', tipo: 'G2', storymap: 'https://storymaps.arcgis.com/stories/878a40be2e714cdfbf3029f8706b0746', minuta: 'https://colbun.sharepoint.com/:b:/s/SPCTC_EC/IQBwggPsmfQgTY4slrYgoaS6AUNidUK8KKIIpQouzXFP8co?e=j36NSk' },
+    { fecha: '2026-08-25', tipo: 'G1', storymap: 'https://storymaps.arcgis.com/stories/bdcf854681ee4bc7bb268f9ba1786ab8', minuta: 'https://colbun.sharepoint.com/:b:/s/SPCTC_EC/IQBsZK1N1d_sSb4xJVoyI7tKAScwVdmwZ8LlSdF84BRLREk?e=NeISCf' }
   ]
 };
 const TIPOS_MESA = { G1: 'Reunión Gerencial G1', G2: 'Reunión Gerencial G2' };
