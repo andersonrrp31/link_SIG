@@ -297,6 +297,32 @@ html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: 
 #sig-app .last a.act.pdf { background: transparent !important; color: #fff !important; border-color: rgba(255,255,255,.45) !important; }
 #sig-app .last span.act.off { color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.35); }
 
+.mesa-apps { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-bottom: 26px; }
+.mapp { overflow: hidden; display: flex; flex-direction: column; }
+#sig-app .mapp-thumb {
+  display: block; width: 100%; aspect-ratio: 16 / 8; position: relative; overflow: hidden; cursor: zoom-in;
+  background: var(--fondo); border-bottom: 1px solid var(--borde);
+}
+.mapp-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; transition: transform .3s; }
+#sig-app .mapp-thumb:hover img { transform: scale(1.03); }
+#sig-app .mapp-thumb.noimg { display: grid; place-items: center; cursor: default; color: var(--azul);
+  background: linear-gradient(135deg, var(--azul-50), var(--verde-50)); }
+#sig-app .mapp-thumb.noimg .ico { width: 44px; height: 44px; opacity: .8; }
+.mapp-step { position: absolute; left: 12px; top: 12px; background: var(--azul); color: #fff; font-size: 11px;
+  font-weight: 700; letter-spacing: .4px; padding: 3px 10px; border-radius: 20px; box-shadow: var(--sombra-sm); }
+.mapp-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; }
+.mapp-body b { font-size: 15px; color: var(--tinta); font-weight: 650; line-height: 1.3; }
+.mapp-sub { font-size: 12px; color: var(--texto-suave); margin-top: 2px; }
+.mapp-body p { font-size: 13px; line-height: 1.6; margin: 10px 0 0; color: var(--texto); }
+.mapp-foot { margin-top: auto; padding-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.sec-title { font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--texto-suave); margin: 0 0 14px; }
+.docs { display: flex; flex-direction: column; gap: 8px; }
+#sig-app .doc { display: flex !important; align-items: center; gap: 10px; padding: 9px 12px !important; border-radius: 8px;
+  border: 1px solid var(--borde) !important; font-size: 13px; color: var(--tinta) !important; text-decoration: none !important; cursor: pointer; }
+#sig-app a.doc:hover { border-color: var(--azul) !important; color: var(--azul) !important; }
+#sig-app span.doc { color: var(--texto-suave) !important; border-style: dashed !important; cursor: default; }
+.doc .ico { width: 16px; height: 16px; color: var(--azul); }
+.doc small { margin-left: auto; font-size: 11px; color: var(--texto-suave); }
 .flow { list-style: none; margin: 0; padding: 0; }
 .flow li { display: flex; gap: 12px; padding-bottom: 14px; position: relative; }
 .flow li:not(:last-child)::after { content: ""; position: absolute; left: 13px; top: 30px; bottom: 2px; width: 2px; background: var(--borde); }
@@ -308,6 +334,7 @@ html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: 
 /* ============================ RESPONSIVO ============================ */
 @media (max-width: 1180px) {
   .app-grid, .mesa-grid { grid-template-columns: 1fr; }
+  .mesa-apps { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .kpis { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 860px) {
@@ -325,6 +352,7 @@ html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: 
   .view { padding: 16px; }
   .page-head h2 { font-size: 20px; }
   .meet { grid-template-columns: 52px minmax(0,1fr); }
+  .mesa-apps { grid-template-columns: minmax(0,1fr); }
   .app-grid { grid-template-columns: minmax(0,1fr); }
   .year-head .y-title { font-size: 14.5px; }
   .m-actions { grid-column: 1 / -1; }
@@ -473,12 +501,15 @@ const APPS = [
   {
     id: 'mesa_incidentes', grupo: 'incidentes', icono: 'calendar', especial: 'mesa',
     titulo: 'Reuniones Mesa de Incidentes',
-    badge: 'NUEVO'
+    badge: 'NUEVO',
+    desc: 'StoryMap minuta sesión G1 G2 asignación casos Power App',
+    tags: ['Mesa', 'Minutas', 'StoryMap']
   },
   {
     id: 'tareas_sgp', grupo: 'incidentes', icono: 'alert',
     titulo: 'Gestión de Tareas SGP Incidentes',
     links: [
+      { tipo: 'app', label: 'Visor Tareas SGP Incidencias',       url: 'https://experience.arcgis.com/experience/42969c86dc8d44ed98235c430081f434' },
       { tipo: 'app', label: 'Aplicativo Web (Gestión y Avances)', url: 'https://experience.arcgis.com/experience/42969c86dc8d44ed98235c430081f434/page/Gesti%C3%B3n-y-Avances' }
     ],
     desc: 'El aplicativo Gestión de Tareas SGP Incidentes es una herramienta interna desarrollada para la Subgerencia de Gestión de Patrimonio (SGP) de Colbún, cuyo objetivo es registrar, gestionar, monitorear y dar seguimiento a incidentes territoriales asociados a las centrales de la compañía. Este sistema integra capacidades de visualización geográfica, gestión de datos y seguimiento de actividades, permitiendo centralizar la información en un solo entorno accesible para el equipo.',
@@ -527,7 +558,44 @@ const APPS = [
    ===================================================================== */
 const MESA = {
   desc: 'Registro histórico de las reuniones de la Mesa de Incidentes (instancias gerenciales G1 y G2). Por cada sesión se publica un StoryMap con el estado territorial de los incidentes y una minuta en PDF almacenada en SharePoint.',
-  carpetaMinutas: '',   // Link a la biblioteca SharePoint de minutas (opcional)
+  // Biblioteca SharePoint de minutas finales (/Documentación GIS/Mesa de Incidentes/Minutas Finales/)
+  carpetaMinutas: 'https://colbun.sharepoint.com/sites/SPCTC_EC/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FSPCTC%5FEC%2FDocumentos%20compartidos%2FDocumentaci%C3%B3n%20GIS%2FMesa%20de%20Incidentes%2FMinutas%20Finales',
+
+  // Aplicativos que soportan el ciclo de la mesa (url vacía = "Link pendiente")
+  aplicativos: [
+    {
+      paso: 1, tipo: 'app', icono: 'alert',
+      titulo: 'Gestión de casos de incidentes',
+      sub: 'ArcGIS Experience · Gestión de Tareas SGP Incidentes',
+      desc: 'Registro, seguimiento y control de los casos de incidentes prediales que se manejan en la mesa: visor territorial, gestión y avances, y revisión de nuevos incidentes.',
+      url: 'https://experience.arcgis.com/experience/42969c86dc8d44ed98235c430081f434',
+      img: 'image2/mesa_gestion_casos.webp'
+    },
+    {
+      paso: 2, tipo: 'app', icono: 'map',
+      titulo: 'Asignación de casos a la sesión',
+      sub: 'ArcGIS Experience · Incidentes',
+      desc: 'Mapa operativo para asignar los casos que se exponen en cada sesión de la mesa, mediante la tabla relacionada de sesiones (filtro MesaSesion).',
+      url: 'https://experience.arcgis.com/experience/18ff0bc345c64bd5a1deda221c26b6b0'
+      img: 'image2/mesa_asignacion_casos.webp'
+    },
+    {
+      paso: 3, tipo: 'powerapps', icono: 'powerapps',
+      titulo: 'SGP Minutas Mesa de Incidentes',
+      sub: 'Power Apps · Power Automate',
+      desc: 'Prepara la sesión y los asistentes, genera la minuta PDF, publica el archivo FINAL en SharePoint y lo envía a los participantes.',
+      url: '',   // TODO: link de la Power App
+      img: ''
+    }
+  ],
+
+  // Documentación del proceso (subir a SharePoint y pegar aquí el link)
+  documentos: [
+    { label: 'Procedimiento Integral de Operación', url: '' },
+    { label: 'Manual de Usuario',                   url: '' },
+    { label: 'Manual Técnico',                      url: '' },
+    { label: 'Presentación del flujo',              url: '' }
+  ],
   reuniones: [
     { fecha: '2026-11-12', tipo: 'G2', storymap: 'https://storymaps.arcgis.com/stories/878a40be2e714cdfbf3029f8706b0746', minuta: 'https://colbun.sharepoint.com/:b:/s/SPCTC_EC/IQBwggPsmfQgTY4slrYgoaS6AUNidUK8KKIIpQouzXFP8co?e=j36NSk' },
     { fecha: '2026-08-25', tipo: 'G1', storymap: 'https://storymaps.arcgis.com/stories/bdcf854681ee4bc7bb268f9ba1786ab8', minuta: 'https://colbun.sharepoint.com/:b:/s/SPCTC_EC/IQBsZK1N1d_sSb4xJVoyI7tKAScwVdmwZ8LlSdF84BRLREk?e=NeISCf' }
@@ -730,6 +798,21 @@ function vistaMesa(a) {
       <div class="card kpi"><div class="k-lbl">Minutas en SharePoint</div><div class="k-val">${nMin}<span style="font-size:15px;color:var(--texto-suave)"> / ${todas.length}</span></div><div class="k-sub">Formato PDF</div></div>
       <div class="card kpi"><div class="k-lbl">Histórico</div><div class="k-val">${todas.length}</div><div class="k-sub">${new Set(todas.map(r=>r.fecha.slice(0,4))).size} año(s) registrados</div></div>
     </div>
+    <h3 class="sec-title">Aplicativos de la mesa</h3>
+    <div class="mesa-apps">${MESA.aplicativos.map(ap => `
+      <article class="card mapp">
+        ${ap.img
+          ? `<button class="mapp-thumb" data-zoom="${esc(ap.img)}" aria-label="Ampliar imagen"><img src="${esc(ap.img)}" alt="${esc(ap.titulo)}" loading="lazy" decoding="async"><span class="mapp-step">Paso ${ap.paso}</span></button>`
+          : `<div class="mapp-thumb noimg">${ico(ap.icono)}<span class="mapp-step">Paso ${ap.paso}</span></div>`}
+        <div class="mapp-body">
+          <b>${esc(ap.titulo)}</b><span class="mapp-sub">${esc(ap.sub)}</span>
+          <p>${esc(ap.desc)}</p>
+          <div class="mapp-foot">${ap.url
+            ? `<a class="act story" href="${esc(ap.url)}" target="_blank" rel="noopener">${ico(ap.tipo)} Abrir aplicativo</a>`
+            : `<span class="act off" title="Link aún no cargado">${ico(ap.tipo)} Link pendiente</span>`}</div>
+        </div>
+      </article>`).join('')}
+    </div>
     <div class="mesa-grid">
       <section>
         <div class="toolbar"><h3 style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--texto-suave)">Reuniones por año</h3><div class="seg" role="group" aria-label="Filtrar por tipo">${seg}</div></div>
@@ -744,12 +827,21 @@ function vistaMesa(a) {
         <section class="card card-pad">
           <h3>Flujo por sesión</h3>
           <ol class="flow">
-            <li><span class="n">1</span><div><b>Reunión G1 / G2</b><span>Una o dos sesiones gerenciales al mes</span></div></li>
-            <li><span class="n">2</span><div><b>StoryMap</b><span>Estado territorial de incidentes</span></div></li>
-            <li><span class="n">3</span><div><b>Minuta PDF</b><span>Generada y almacenada en SharePoint</span></div></li>
+            <li><span class="n">1</span><div><b>Casos depurados</b><span>Survey123 → Excel intermedio → GIS</span></div></li>
+            <li><span class="n">2</span><div><b>Asignación a la sesión</b><span>Casos expuestos en la reunión G1 / G2</span></div></li>
+            <li><span class="n">3</span><div><b>StoryMap</b><span>Estado territorial de los incidentes</span></div></li>
+            <li><span class="n">4</span><div><b>Minuta FINAL</b><span>Power App · publicada en SharePoint</span></div></li>
+            <li><span class="n">5</span><div><b>Envío a participantes</b><span>Asistentes efectivos con enlace al PDF</span></div></li>
           </ol>
           ${MESA.carpetaMinutas ? `<a class="lnk" data-tipo="carpeta" href="${esc(MESA.carpetaMinutas)}" target="_blank" rel="noopener" style="margin-top:6px">
             <span class="lnk-ico">${ico('carpeta')}</span><span class="lnk-txt"><b>Biblioteca de minutas</b><span>SharePoint</span></span><span class="lnk-go">${ico('ext')}</span></a>` : ''}
+        </section>
+        <section class="card card-pad">
+          <h3>Documentación</h3>
+          <div class="docs">${MESA.documentos.map(d => d.url
+            ? `<a class="doc" href="${esc(d.url)}" target="_blank" rel="noopener">${ico('pdf')} ${esc(d.label)}<small>Abrir</small></a>`
+            : `<span class="doc" title="Documento aún no publicado">${ico('pdf')} ${esc(d.label)}<small>Pendiente</small></span>`).join('')}
+          </div>
         </section>
         <section class="card card-pad">
           <h3>Relacionado</h3>
