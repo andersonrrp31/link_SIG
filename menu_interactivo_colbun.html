@@ -3,355 +3,810 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Colbún - SIG</title>
+<title>Colbún · Portal SIG</title>
 <base target="_blank">
 <style>
-  /* === RESET base para iframe de ArcGIS Hub === */
-  html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-  }
+/* =====================================================================
+   PORTAL SIG · Subgerencia de Gestión de Patrimonio · Colbún S.A.
+   Todo el estilo está acotado a #sig-app para blindarlo contra el CSS
+   que ArcGIS Hub inyecta en el iframe.
+   ===================================================================== */
+:root {
+  --azul: #0072bb;
+  --azul-900: #00365a;
+  --azul-800: #004b7d;
+  --azul-700: #005d99;
+  --azul-50: #e8f2fa;
+  --verde: #6ab43e;
+  --verde-700: #4f8f2b;
+  --verde-50: #eef7e8;
+  --ambar: #d98b00;
+  --ambar-50: #fdf3e0;
+  --tinta: #12212e;
+  --texto: #3b4a57;
+  --texto-suave: #6b7a87;
+  --borde: #dde5ec;
+  --fondo: #f3f6f9;
+  --superficie: #ffffff;
+  --radio: 10px;
+  --sombra-sm: 0 1px 2px rgba(16,33,46,.06), 0 1px 3px rgba(16,33,46,.08);
+  --sombra-md: 0 4px 12px rgba(16,33,46,.08), 0 2px 4px rgba(16,33,46,.05);
+  --sidebar: 300px;
+  --fuente: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    display: flex;
-    height: 100vh;
-    min-height: 100vh;
-  }
+html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: var(--fondo); }
 
-  /* === Panel izquierdo  === */
-  .menu {
-    background-color: #0072bb;
-    color: white;
-    width: 22%;
-    min-width: 200px;
-    padding: 15px;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.5) transparent;
-  }
-  .menu::-webkit-scrollbar {
-    width: 8px;
-  }
-  .menu::-webkit-scrollbar-thumb {
-    background-color: rgba(255,255,255,0.5);
-    border-radius: 4px;
-  }
-  .menu h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: white;
-  }
-  .menu button {
-    display: block;
-    width: 100%;
-    background: none;
-    border: none;
-    color: white;
-    padding: 10px;
-    text-align: left;
-    cursor: pointer;
-    font-size: 14px;
-    margin-bottom: 5px;
-    white-space: normal;
-    word-wrap: break-word;
-    line-height: 1.3;
-    border-radius: 4px;
-  }
-  .menu button:hover, .menu button.active {
-    background-color: #6ab43e;
-  }
+#sig-app, #sig-app * { box-sizing: border-box; }
+#sig-app {
+  font-family: var(--fuente);
+  color: var(--texto);
+  font-size: 14px;
+  line-height: 1.5;
+  display: grid;
+  grid-template-columns: var(--sidebar) 1fr;
+  height: 100vh;
+  background: var(--fondo);
+  -webkit-font-smoothing: antialiased;
+}
+/* Neutraliza estilos heredados de Hub sobre botones / enlaces */
+#sig-app button, #sig-app a, #sig-app input { all: unset; box-sizing: border-box; font-family: var(--fuente); }
+#sig-app svg { flex-shrink: 0; }
+#sig-app .ico { width: 16px; height: 16px; }
+.scrim { display: none; }
+#sig-app :focus-visible { outline: 2px solid var(--verde) !important; outline-offset: 2px; }
 
-  /* === Compacta el menú en laptops de poca altura para que quepan más ítems antes de necesitar scroll === */
-  @media (max-height: 700px) {
-    .menu button {
-      padding: 6px 10px;
-      font-size: 13px;
-      margin-bottom: 3px;
-    }
-    .menu h2 {
-      margin-bottom: 10px;
-    }
-  }
+/* ============================== SIDEBAR ============================== */
+.sb {
+  background: linear-gradient(180deg, var(--azul-800) 0%, var(--azul-900) 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid rgba(0,0,0,.15);
+}
+.sb-brand { display: flex; align-items: center; gap: 12px; padding: 20px 20px 16px; }
+.sb-logo {
+  width: 38px; height: 38px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-700) 100%);
+  display: grid; place-items: center; font-weight: 700; font-size: 18px; color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+.sb-brand h1 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: .2px; color: #fff; line-height: 1.2; }
+.sb-brand p { margin: 2px 0 0; font-size: 11.5px; color: rgba(255,255,255,.65); line-height: 1.3; }
 
-  /* === Panel central === */
-  .submenu {
-    background-color: #e9eff3;
-    width: 38%;
-    padding: 20px;
-    overflow-y: auto;
-    box-sizing: border-box;
-  }
-  .submenu h3 {
-    color: #0072bb;
-    margin-bottom: 20px;
-  }
+.sb-search { padding: 4px 16px 12px; }
+.sb-search label {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.14);
+  border-radius: 8px; padding: 8px 10px; color: rgba(255,255,255,.7);
+  transition: background .15s, border-color .15s;
+}
+.sb-search label:focus-within { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.35); }
+#sig-app .sb-search input { flex: 1; color: #fff; font-size: 13px; min-width: 0; cursor: text; }
+#sig-app .sb-search input::placeholder { color: rgba(255,255,255,.55); }
+.sb-search kbd {
+  font-family: var(--fuente); font-size: 10.5px; color: rgba(255,255,255,.6);
+  border: 1px solid rgba(255,255,255,.25); border-radius: 4px; padding: 0 5px;
+}
 
-  /* === RESET para anular estilos de ArcGIS Hub === */
-  .submenu a,
-  .submenu a:link,
-  .submenu a:visited,
-  .submenu a:hover,
-  .submenu a:active,
-  .submenu a:focus {
-    all: unset;
-  }
+.sb-nav {
+  flex: 1; overflow-y: auto; padding: 4px 12px 16px;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.25) transparent;
+}
+.sb-nav::-webkit-scrollbar { width: 6px; }
+.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 3px; }
+.sb-group { margin-top: 14px; }
+.sb-group-title {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,255,255,.5); padding: 0 10px 6px; margin: 0;
+}
+#sig-app .sb-item {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 8px 10px; border-radius: 7px; cursor: pointer;
+  color: rgba(255,255,255,.86); font-size: 13.5px; line-height: 1.3;
+  position: relative; transition: background .15s, color .15s;
+}
+#sig-app .sb-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+#sig-app .sb-item[aria-current="page"] { background: rgba(255,255,255,.14); color: #fff; font-weight: 600; }
+#sig-app .sb-item[aria-current="page"]::before {
+  content: ""; position: absolute; left: -12px; top: 8px; bottom: 8px; width: 3px;
+  border-radius: 0 3px 3px 0; background: var(--verde);
+}
+.sb-item .ico { width: 18px; height: 18px; opacity: .85; }
+.sb-item .lbl { flex: 1; }
+.sb-badge {
+  font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px;
+  background: var(--verde); color: #fff; letter-spacing: .3px;
+}
+.sb-empty { padding: 16px 10px; font-size: 12.5px; color: rgba(255,255,255,.6); }
+.sb-foot {
+  padding: 12px 20px; font-size: 11px; color: rgba(255,255,255,.5);
+  border-top: 1px solid rgba(255,255,255,.08);
+}
 
-  /* === BOTONES DE ENLACE (blindados contra Hub) === */
-  .submenu a,
-  .submenu a:link,
-  .submenu a:visited {
-    box-sizing: border-box !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    background-color: #6ab43e !important;
-    background-image: none !important;
-    color: #ffffff !important;
-    text-decoration: none !important;
-    text-transform: none !important;
-    padding: 12px 18px !important;
-    margin-bottom: 12px !important;
-    border: none !important;
-    border-radius: 6px !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 15px !important;
-    font-weight: bold !important;
-    line-height: 1.2 !important;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important;
-    transition: all 0.2s ease-in-out !important;
-    cursor: pointer !important;
-  }
+/* =============================== MAIN =============================== */
+.main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  height: 56px; padding: 0 28px; flex-shrink: 0;
+  background: var(--superficie); border-bottom: 1px solid var(--borde);
+}
+#sig-app .menu-btn { display: none; cursor: pointer; padding: 6px; border-radius: 6px; color: var(--tinta); }
+.crumbs { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--texto-suave); min-width: 0; }
+.crumbs strong { color: var(--tinta); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crumbs .ico { width: 14px; height: 14px; }
+.topbar .spacer { flex: 1; }
+.topbar .org { font-size: 12px; color: var(--texto-suave); white-space: nowrap; }
 
-  .submenu a:hover,
-  .submenu a:focus {
-    background-color: #559132 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.2) !important;
-    color: #ffffff !important;
-    text-decoration: none !important;
-  }
+.view { flex: 1; overflow-y: auto; padding: 28px; }
+.view-inner { max-width: 1320px; margin: 0 auto; animation: fade .25s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-  .submenu a::after {
-    content: 'Abrir ↗' !important;
-    background-color: rgba(255,255,255,0.25) !important;
-    color: #ffffff !important;
-    padding: 4px 10px !important;
-    border-radius: 4px !important;
-    font-size: 13px !important;
-    font-weight: normal !important;
-    margin-left: 10px !important;
-    text-decoration: none !important;
-  }
+.page-head { margin-bottom: 22px; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; color: var(--azul);
+}
+.page-head h2 { margin: 6px 0 0; font-size: 24px; font-weight: 650; color: var(--tinta); line-height: 1.25; letter-spacing: -.2px; }
 
-  /* === Descripción  === */
-  .descripcion {
-    font-size: 14px;
-    color: #333;
-    line-height: 1.6;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #d1d9e0;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  .descripcion.visible {
-    opacity: 1;
-  }
+.card { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); box-shadow: var(--sombra-sm); }
+.card-pad { padding: 22px; }
+.card h3 {
+  margin: 0 0 14px; font-size: 12px; font-weight: 700; letter-spacing: .8px;
+  text-transform: uppercase; color: var(--texto-suave);
+}
 
-  /* === Panel derecho === */
-  .imagen {
-    flex-grow: 1;
-    text-align: center;
-    background-color: #fff;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
+/* ---- Vista aplicativo: detalle + vista previa ---- */
+.app-grid { display: grid; grid-template-columns: minmax(340px, 5fr) minmax(0, 7fr); gap: 22px; align-items: start; }
+.app-grid > .col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+
+.links { display: flex; flex-direction: column; gap: 10px; }
+#sig-app a.lnk {
+  display: flex !important; align-items: center; gap: 14px;
+  padding: 12px 14px !important; border-radius: 9px;
+  border: 1px solid var(--borde) !important; background: var(--superficie) !important;
+  color: var(--tinta) !important; text-decoration: none !important; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+#sig-app a.lnk:hover { border-color: var(--azul) !important; box-shadow: var(--sombra-md); transform: translateY(-1px); }
+.lnk-ico {
+  width: 38px; height: 38px; border-radius: 8px; display: grid; place-items: center;
+  background: var(--azul-50); color: var(--azul);
+}
+.lnk-ico .ico { width: 20px; height: 20px; }
+.lnk[data-tipo="dashboard"] .lnk-ico, .lnk[data-tipo="powerbi"] .lnk-ico { background: var(--verde-50); color: var(--verde-700); }
+.lnk[data-tipo="carpeta"] .lnk-ico, .lnk[data-tipo="powerapps"] .lnk-ico { background: var(--ambar-50); color: var(--ambar); }
+.lnk-txt { flex: 1; min-width: 0; }
+.lnk-txt b { display: block; font-size: 14px; font-weight: 600; color: var(--tinta); }
+.lnk-txt span { display: block; font-size: 12px; color: var(--texto-suave); margin-top: 1px; }
+.lnk-go { color: var(--texto-suave); transition: color .15s, transform .15s; }
+#sig-app a.lnk:hover .lnk-go { color: var(--azul); transform: translate(2px,-2px); }
+
+.desc { font-size: 14px; line-height: 1.7; color: var(--texto); }
+.desc p { margin: 0 0 10px; }
+.desc p:last-child { margin-bottom: 0; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.tag {
+  font-size: 11.5px; padding: 3px 9px; border-radius: 20px;
+  background: var(--fondo); border: 1px solid var(--borde); color: var(--texto);
+}
+
+.preview { overflow: hidden; }
+.preview-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--borde);
+}
+.preview-head h3 { margin: 0; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--borde); display: block; }
+#sig-app .preview-img { display: block; cursor: zoom-in; background: var(--fondo); padding: 14px; position: relative; }
+.preview-img img { display: block; width: 100%; height: auto; border-radius: 6px; box-shadow: var(--sombra-md); opacity: 0; transition: opacity .35s; }
+.preview-img img.ok { opacity: 1; }
+.zoom-hint {
+  position: absolute; right: 24px; bottom: 24px; display: flex; align-items: center; gap: 6px;
+  background: rgba(18,33,46,.78); color: #fff; font-size: 11.5px; padding: 5px 10px; border-radius: 6px;
+  opacity: 0; transition: opacity .2s;
+}
+#sig-app .preview-img:hover .zoom-hint { opacity: 1; }
+
+/* Lightbox */
+.lightbox {
+  position: fixed; inset: 0; background: rgba(8,18,28,.88); z-index: 50;
+  display: none; align-items: center; justify-content: center; padding: 40px; cursor: zoom-out;
+}
+.lightbox.open { display: flex; animation: fade .2s ease; }
+.lightbox img { max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+
+/* ========================= MESA DE INCIDENTES ========================= */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+.kpi { padding: 16px 18px; }
+.kpi .k-lbl { font-size: 12px; color: var(--texto-suave); font-weight: 600; }
+.kpi .k-val { font-size: 26px; font-weight: 700; color: var(--tinta); margin-top: 4px; line-height: 1.1; letter-spacing: -.3px; }
+.kpi .k-sub { font-size: 12px; color: var(--texto-suave); margin-top: 4px; }
+
+.mesa-grid { display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 22px; align-items: start; }
+.mesa-grid > * { min-width: 0; }
+
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.toolbar h3 { margin: 0; }
+.seg { display: inline-flex; background: var(--fondo); border: 1px solid var(--borde); border-radius: 8px; padding: 3px; }
+#sig-app .seg button {
+  padding: 5px 12px; font-size: 12.5px; border-radius: 6px; cursor: pointer; color: var(--texto); font-weight: 600;
+}
+#sig-app .seg button[aria-pressed="true"] { background: var(--superficie); color: var(--azul); box-shadow: var(--sombra-sm); }
+
+.year { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); margin-bottom: 12px; overflow: hidden; }
+#sig-app .year-head {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 18px; cursor: pointer;
+  transition: background .15s;
+}
+#sig-app .year-head:hover { background: var(--fondo); }
+.year-head .chev { width: 18px; height: 18px; color: var(--texto-suave); transition: transform .2s; }
+.year-head[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.year-head .y-title { font-size: 16px; font-weight: 650; color: var(--tinta); }
+.year-head .y-count { margin-left: auto; font-size: 12px; color: var(--texto-suave); }
+.year-body { border-top: 1px solid var(--borde); padding: 6px 18px 18px; }
+.year-body[hidden] { display: none; }
+
+.month { margin-top: 14px; }
+.month-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.month-head b { font-size: 13px; font-weight: 700; color: var(--tinta); text-transform: capitalize; }
+.month-head span { font-size: 12px; color: var(--texto-suave); }
+.month-head hr { flex: 1; border: 0; border-top: 1px dashed var(--borde); margin: 0; }
+
+.meet {
+  display: grid; grid-template-columns: 58px 1fr auto; gap: 16px; align-items: center;
+  padding: 12px 14px; border: 1px solid var(--borde); border-radius: 9px; margin-bottom: 8px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.meet:hover { border-color: #c4d3df; box-shadow: var(--sombra-sm); }
+.date {
+  text-align: center; border-radius: 8px; overflow: hidden; border: 1px solid var(--borde); background: var(--superficie);
+}
+.date .d-m { display: block; background: var(--azul); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: .8px; padding: 2px 0; text-transform: uppercase; }
+.date .d-d { display: block; font-size: 20px; font-weight: 700; color: var(--tinta); padding: 2px 0 3px; line-height: 1.2; }
+.m-info { min-width: 0; }
+.m-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.m-title b { font-size: 14px; color: var(--tinta); font-weight: 600; }
+.m-sub { font-size: 12px; color: var(--texto-suave); margin-top: 2px; }
+.m-sub::first-letter { text-transform: uppercase; }
+.pill { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: .4px; }
+.pill.G1 { background: var(--azul-50); color: var(--azul-700); }
+.pill.G2 { background: var(--verde-50); color: var(--verde-700); }
+.m-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+#sig-app a.act, #sig-app span.act {
+  display: inline-flex !important; align-items: center; gap: 6px; padding: 7px 12px !important;
+  border-radius: 7px; font-size: 12.5px; font-weight: 600; white-space: nowrap;
+  text-decoration: none !important; cursor: pointer; transition: background .15s, border-color .15s;
+}
+#sig-app a.act.story { background: var(--azul) !important; color: #fff !important; border: 1px solid var(--azul) !important; }
+#sig-app a.act.story:hover { background: var(--azul-700) !important; }
+#sig-app a.act.pdf { background: var(--superficie) !important; color: var(--tinta) !important; border: 1px solid var(--borde) !important; }
+#sig-app a.act.pdf:hover { border-color: #b3311f !important; color: #b3311f !important; }
+#sig-app span.act.off { color: var(--texto-suave); border: 1px dashed var(--borde); cursor: default; background: transparent; }
+.act .ico { width: 15px; height: 15px; }
+
+.side-stack { display: flex; flex-direction: column; gap: 22px; }
+.last { padding: 20px; background: linear-gradient(135deg, var(--azul-800), var(--azul)); color: #fff; border: 0; }
+.last .eyebrow { color: rgba(255,255,255,.75); }
+.last .l-date { font-size: 22px; font-weight: 700; margin: 8px 0 2px; }
+.last .l-sub { font-size: 13px; color: rgba(255,255,255,.8); }
+.last .m-actions { margin-top: 16px; }
+#sig-app .last a.act.story { background: #fff !important; color: var(--azul-800) !important; border-color: #fff !important; }
+#sig-app .last a.act.pdf { background: transparent !important; color: #fff !important; border-color: rgba(255,255,255,.45) !important; }
+#sig-app .last span.act.off { color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.35); }
+
+.flow { list-style: none; margin: 0; padding: 0; }
+.flow li { display: flex; gap: 12px; padding-bottom: 14px; position: relative; }
+.flow li:not(:last-child)::after { content: ""; position: absolute; left: 13px; top: 30px; bottom: 2px; width: 2px; background: var(--borde); }
+.flow .n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--azul-50); color: var(--azul); flex-shrink: 0; }
+.flow b { display: block; font-size: 13px; color: var(--tinta); }
+.flow span { font-size: 12px; color: var(--texto-suave); }
+.empty-state { text-align: center; padding: 30px 10px; color: var(--texto-suave); font-size: 13px; }
+
+/* ============================ RESPONSIVO ============================ */
+@media (max-width: 1180px) {
+  .app-grid, .mesa-grid { grid-template-columns: 1fr; }
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 860px) {
+  #sig-app { grid-template-columns: 1fr; }
+  .sb {
+    position: fixed; z-index: 40; top: 0; bottom: 0; left: 0; width: min(var(--sidebar), 86vw);
+    transform: translateX(-100%); transition: transform .25s ease;
   }
-  .imagen h3 {
-    color: #0072bb;
-  }
-  .imagen img {
-    max-width: 90%;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  .imagen img.visible {
-    opacity: 1;
-  }
+  #sig-app.nav-open .sb { transform: none; box-shadow: 0 0 40px rgba(0,0,0,.3); }
+  #sig-app .menu-btn { display: inline-flex; }
+  .scrim { position: fixed; inset: 0; background: rgba(8,18,28,.45); z-index: 30; display: none; }
+  #sig-app.nav-open .scrim { display: block; }
+  .topbar { padding: 0 16px; }
+  .topbar .org { display: none; }
+  .view { padding: 16px; }
+  .page-head h2 { font-size: 20px; }
+  .meet { grid-template-columns: 52px minmax(0,1fr); }
+  .app-grid { grid-template-columns: minmax(0,1fr); }
+  .year-head .y-title { font-size: 14.5px; }
+  .m-actions { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) { .kpis { grid-template-columns: 1fr 1fr; gap: 10px; } .kpi .k-val { font-size: 22px; } }
+@media (prefers-reduced-motion: reduce) { #sig-app * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
 
-<div class="menu">
-  <h2>Colbún · SIG</h2>
-  <button onclick="mostrar.call(this, 'loica')" class="active">Proyecto Loica Portezuelo</button>
-  <button onclick="mostrar.call(this, 'cuatrovientos')">Proyecto Cuatro Viento</button>
-  <button onclick="mostrar.call(this, 'arriendo')">Aplicativo SIG de Arriendo</button>
-  <button onclick="mostrar.call(this, 'concesiones')">Aplicativo SIG de Concesiones Mineras</button>
-  <button onclick="mostrar.call(this, 'patrimonio')">Control de Revisión BBDD de Patrimonio 2026</button>
-  <button onclick="mostrar.call(this, 'terreno')">Portal de Terrenos y Servidumbres</button>
-  <button onclick="mostrar.call(this, 'arquitectura')">Arquitectura SIG</button>
-  <button onclick="mostrar.call(this, 'explorador')">Explorador de Imágenes</button>
-  <button onclick="mostrar.call(this, 'mariaelena')">Catastro Territorial María Elena - Inti Pacha</button>
-  <button onclick="mostrar.call(this, 'planexpansion')">Visor de Análisis Territorial – Plan de Expansión TX</button>
-  <button onclick="mostrar.call(this, 'tareas_sgp')">Gestión de Tareas SGP Incidentes</button>
-  <button onclick="mostrar.call(this, 'control_tareas_sgp')">Control de Tareas SGP</button>
-</div>
+<div id="sig-app">
+  <aside class="sb" id="sb" aria-label="Navegación principal">
+    <div class="sb-brand">
+      <div class="sb-logo" aria-hidden="true">C</div>
+      <div>
+        <h1>Colbún · Portal SIG</h1>
+        <p>Subgerencia de Gestión de Patrimonio</p>
+      </div>
+    </div>
+    <div class="sb-search">
+      <label>
+        <span data-icon="search" class="ico-wrap"></span>
+        <input id="q" type="search" placeholder="Buscar aplicativo…" autocomplete="off" aria-label="Buscar aplicativo">
+        <kbd>/</kbd>
+      </label>
+    </div>
+    <nav class="sb-nav" id="nav"></nav>
+    <div class="sb-foot">Terrenos y Concesiones SIG · <span id="anio"></span></div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
 
-<div class="submenu" id="submenu">
-  <h3>Proyecto Loica Portezuelo</h3>
-  <a href="https://experience.arcgis.com/experience/63b92e386bc042feaffc945ecd0d0bd2" target="_blank">Aplicativo Web Completo</a>
-  <a href="https://experience.arcgis.com/experience/9edc1cf65df04b5fa3a0f5f81859fda9" target="_blank">Aplicativo Web para Editar</a>
-  <a href="https://www.arcgis.com/apps/dashboards/82fb3d1991fa4d45854a7eafacb90bf7" target="_blank">Visualizador o Cuadro de Mando</a>
-  <div id="descripcion" class="descripcion visible">
-    Aplicativo SIG que centraliza toda la información territorial y predial del proyecto Loica Portezuelo.
-    Permite visualizar infraestructura, predios y servidumbres, editar atributos y analizar avances mediante un cuadro de mando.
-  </div>
-</div>
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" data-icon="menu"></button>
+      <div class="crumbs" id="crumbs"></div>
+      <div class="spacer"></div>
+      <div class="org">Colbún S.A.</div>
+    </header>
+    <div class="view" id="view"></div>
+  </main>
 
-<div class="imagen" id="imagen">
-  <h3>Proyecto Loica Portezuelo</h3>
-  <img src="image2/loica.png" alt="Proyecto Loica Portezuelo" class="visible">
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Vista ampliada"><img alt=""></div>
 </div>
 
 <script>
-function mostrar(opcion) {
-  const botones = document.querySelectorAll('.menu button');
-  botones.forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+/* =====================================================================
+   CONFIGURACIÓN · Para agregar/editar aplicativos solo modificar APPS.
+   tipo de link: app | editar | dashboard | carpeta | powerapps | powerbi | web
+   ===================================================================== */
+const GRUPOS = [
+  { id: 'proyectos',  titulo: 'Proyectos' },
+  { id: 'patrimonio', titulo: 'Gestión Patrimonial' },
+  { id: 'incidentes', titulo: 'Incidentes y Tareas' },
+  { id: 'plataforma', titulo: 'Plataforma SIG' }
+];
 
-  let titulo = '';
-  let contenido = '';
-  let descripcion = '';
-  let imagen = '';
+const APPS = [
+  {
+    id: 'loica', grupo: 'proyectos', icono: 'pin',
+    titulo: 'Proyecto Loica Portezuelo',
+    links: [
+      { tipo: 'app',       label: 'Aplicativo Web Completo',        url: 'https://experience.arcgis.com/experience/63b92e386bc042feaffc945ecd0d0bd2' },
+      { tipo: 'editar',    label: 'Aplicativo Web para Editar',     url: 'https://experience.arcgis.com/experience/9edc1cf65df04b5fa3a0f5f81859fda9' },
+      { tipo: 'dashboard', label: 'Visualizador o Cuadro de Mando', url: 'https://www.arcgis.com/apps/dashboards/82fb3d1991fa4d45854a7eafacb90bf7' }
+    ],
+    desc: 'Aplicativo SIG que centraliza toda la información territorial y predial del proyecto Loica Portezuelo. Permite visualizar infraestructura, predios y servidumbres, editar atributos y analizar avances mediante un cuadro de mando.',
+    tags: ['Predios', 'Servidumbres', 'Edición'],
+    img: 'image2/loica.png'
+  },
+  {
+    id: 'cuatrovientos', grupo: 'proyectos', icono: 'pin',
+    titulo: 'Proyecto Cuatro Viento',
+    links: [
+      { tipo: 'app',       label: 'Aplicativo Web Completo',        url: 'https://experience.arcgis.com/experience/7ac34be3b87f4417a94b4f380e759fd6' },
+      { tipo: 'editar',    label: 'Aplicativo Web para Editar',     url: 'https://experience.arcgis.com/experience/8d70ffde1d194cd6a274738bd24c36c1' },
+      { tipo: 'dashboard', label: 'Visualizador o Cuadro de Mando', url: 'https://www.arcgis.com/apps/dashboards/55d9d5da3b784578b79729f9a09bebf6' }
+    ],
+    desc: 'Plataforma web que gestiona los datos territoriales del proyecto Cuatro Viento. Permite consultar y editar información de terrenos y servidumbres, y supervisar avances mediante dashboards.',
+    tags: ['Terrenos', 'Servidumbres', 'Edición'],
+    img: 'image2/cuatrovientos.png'
+  },
+  {
+    id: 'mariaelena', grupo: 'proyectos', icono: 'map',
+    titulo: 'Catastro Territorial María Elena - Inti Pacha',
+    links: [
+      { tipo: 'dashboard', label: 'Visualizador', url: 'https://colbun.maps.arcgis.com/apps/dashboards/7d618900f4694a43b7d381f4a7a86c9b' }
+    ],
+    desc: 'Dashboard interactivo del Catastro Territorial Avanzado para los trazados LAT Inti Pacha - S/E Crucero e Inti Pacha - S/E Kimal, comuna de María Elena, Región de Antofagasta. Incluye 70 eventos territoriales: servidumbres inscritas, líneas de transmisión eléctrica, concesiones eléctricas, proyectos ingresados al SEA, actos administrativos de Bienes Nacionales y propiedad superficial. Estudio elaborado por Andes Datatec, mayo 2026. Subgerencia de Gestión de Patrimonio, Colbún S.A.',
+    tags: ['Catastro', 'Transmisión', 'Antofagasta'],
+    img: 'image2/Catastro_inti.png'
+  },
+  {
+    id: 'planexpansion', grupo: 'proyectos', icono: 'target',
+    titulo: 'Visor de Análisis Territorial – Plan de Expansión TX',
+    subtitulo: 'Cambrales · La Calle',
+    links: [
+      { tipo: 'app', label: 'Aplicativo Web', url: 'https://experience.arcgis.com/experience/4737c661ad914a8891a2bd0cb8b4a3d1' }
+    ],
+    desc: 'Visor GIS interno de Colbún diseñado para evaluar y seleccionar terrenos candidatos para las subestaciones Cambrales y La Calle dentro del Plan de Expansión de Transmisión 2026. Permite analizar información territorial, restricciones, oportunidades y antecedentes relevantes para apoyar la toma de decisiones en etapas tempranas del proyecto.',
+    tags: ['Subestaciones', 'Selección de sitio', '2026'],
+    img: 'image2/Plan_Expansion.png'
+  },
+  {
+    id: 'arriendo', grupo: 'patrimonio', icono: 'key',
+    titulo: 'Aplicativo SIG de Arriendo',
+    links: [
+      { tipo: 'editar',    label: 'Editor Web de BBDD Arriendos', url: 'https://experience.arcgis.com/experience/fc133609fa6f41b1a52004826dc7b9fa' },
+      { tipo: 'dashboard', label: 'Visualizador',                 url: 'https://colbun.maps.arcgis.com/apps/dashboards/7d79241a12d14be3a58516c4a5ad08d4' }
+    ],
+    desc: 'Herramienta de gestión de arriendos georreferenciados. Permite editar y mantener actualizada la base de datos de arriendos, consultar ubicaciones y estado de contratos.',
+    tags: ['Contratos', 'BBDD'],
+    img: 'image2/arriendo.png'
+  },
+  {
+    id: 'concesiones', grupo: 'patrimonio', icono: 'pick',
+    titulo: 'Aplicativo SIG de Concesiones Mineras',
+    links: [
+      { tipo: 'dashboard', label: 'Visualizador de Concesiones Mineras', url: 'https://gis.colbunsa.cl/portal/apps/dashboards/23e4f3fb32d2483db8f7c9b82a3c96f4' }
+    ],
+    desc: 'Aplicativo SIG que consolida la información geográfica de las concesiones mineras pertenecientes al patrimonio de Colbún. Permite visualizar los polígonos asociados a permisos y concesiones mineras vigentes, de acuerdo con la normativa chilena, facilitando el seguimiento y gestión de estos derechos dentro del territorio nacional.',
+    tags: ['Concesiones', 'Enterprise'],
+    img: 'image2/Concesiones_V2.png'
+  },
+  {
+    id: 'patrimonio', grupo: 'patrimonio', icono: 'check',
+    titulo: 'Control de Revisión BBDD de Patrimonio 2026',
+    links: [
+      { tipo: 'dashboard', label: 'Visualizador', url: 'https://colbun.maps.arcgis.com/apps/dashboards/aa468373a64142ab8b4f165044f5ea23#' },
+      { tipo: 'carpeta',   label: 'Documentos Legales', url: 'https://colbun.sharepoint.com/sites/SPCTC_EC/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FSPCTC%5FEC%2FDocumentos%20compartidos%2FDocumentaci%C3%B3n%20GIS%2FBBDD%5FPATRIMONIO%5FCOLBUN%5FDOCUEMNTOS%5FLEGALES&p=true' }
+    ],
+    desc: 'El Control de Revisión BBDD de Patrimonio es una plataforma de seguimiento que centraliza el estado de avance de la revisión de los antecedentes geográficos y legales de los predios corporativos. Permite visualizar el progreso por central, identificar registros pendientes, controlar observaciones detectadas durante el proceso de validación y acceder rápidamente a la documentación de respaldo asociada a cada predio.\n\nLa herramienta proporciona trazabilidad del proceso de actualización de la Base de Datos GIS, facilitando la supervisión del cumplimiento de los hitos de revisión y garantizando la calidad de la información patrimonial antes de su incorporación definitiva al repositorio corporativo.',
+    tags: ['QA/QC', 'Documentación legal', '2026'],
+    img: 'image2/Revision_BBDD.png'
+  },
+  {
+    id: 'terreno', grupo: 'patrimonio', icono: 'layers',
+    titulo: 'Portal de Terrenos y Servidumbres',
+    links: [
+      { tipo: 'app', label: 'Aplicativo Web Actual', url: 'https://experience.arcgis.com/experience/f1eac2ac84b84012b447bdd0e3f5e4ad' },
+      { tipo: 'app', label: 'Aplicativo Web Beta',   url: 'https://experience.arcgis.com/experience/f79cfa2f21dd4b92b469478de6a55663' }
+    ],
+    desc: 'Portal corporativo que consolida la información de terrenos y servidumbres. Permite consultar capas geográficas integradas con bases legales y técnicas.',
+    tags: ['Terrenos', 'Servidumbres'],
+    img: 'image2/terreno.png'
+  },
+  {
+    id: 'mesa_incidentes', grupo: 'incidentes', icono: 'calendar', especial: 'mesa',
+    titulo: 'Reuniones Mesa de Incidentes',
+    badge: 'NUEVO'
+  },
+  {
+    id: 'tareas_sgp', grupo: 'incidentes', icono: 'alert',
+    titulo: 'Gestión de Tareas SGP Incidentes',
+    links: [
+      { tipo: 'app', label: 'Aplicativo Web (Gestión y Avances)', url: 'https://experience.arcgis.com/experience/42969c86dc8d44ed98235c430081f434/page/Gesti%C3%B3n-y-Avances' }
+    ],
+    desc: 'El aplicativo Gestión de Tareas SGP Incidentes es una herramienta interna desarrollada para la Subgerencia de Gestión de Patrimonio (SGP) de Colbún, cuyo objetivo es registrar, gestionar, monitorear y dar seguimiento a incidentes territoriales asociados a las centrales de la compañía. Este sistema integra capacidades de visualización geográfica, gestión de datos y seguimiento de actividades, permitiendo centralizar la información en un solo entorno accesible para el equipo.',
+    tags: ['Incidentes', 'Seguimiento'],
+    img: 'image2/APP_Tareas_incidencias_SGP.png'
+  },
+  {
+    id: 'control_tareas_sgp', grupo: 'incidentes', icono: 'list',
+    titulo: 'Control de Tareas SGP',
+    links: [
+      { tipo: 'powerapps', label: 'Power App',          url: 'https://apps.powerapps.com/play/e/default-f402c82d-b1a3-4983-a2cc-d490bb898cb6/a/dce5dcec-7f78-4dd2-b84f-4e1671d73eab?tenantId=f402c82d-b1a3-4983-a2cc-d490bb898cb6' },
+      { tipo: 'powerbi',   label: 'Dashboard Power BI', url: 'https://app.powerbi.com/links/b-0rJ3qcBV?ctid=f402c82d-b1a3-4983-a2cc-d490bb898cb6&pbi_source=linkShare&bookmarkGuid=aa5757d3-619b-4c0b-b73f-d864c8c3737d' }
+    ],
+    desc: 'Sistema Control de Tareas SGP - la solución integral del equipo de Terrenos y Concesiones. Gestiona todo el ciclo de tareas: asignación, seguimiento, aprobación y cierre, con bitácora personal por tarea, generación de PDF profesional, notificaciones inteligentes y dashboard analítico.',
+    tags: ['Power Platform', 'Bitácora'],
+    img: 'image2/control_tareas_sgp.png'
+  },
+  {
+    id: 'arquitectura', grupo: 'plataforma', icono: 'stack',
+    titulo: 'Arquitectura SIG',
+    links: [
+      { tipo: 'web', label: 'Geoportal versión Beta', url: 'https://gis.colbunsa.cl/portal/apps/sites/#/geportal-patrimonio' }
+    ],
+    desc: 'Geoportal institucional que centraliza los recursos, aplicaciones y servicios geoespaciales de la Subgerencia de Gestión de Patrimonio. Permite acceso unificado a aplicativos y servicios SIG.',
+    tags: ['Enterprise 11.3', 'Geoportal'],
+    img: 'image2/arquitectura.png'
+  },
+  {
+    id: 'explorador', grupo: 'plataforma', icono: 'satellite',
+    titulo: 'Explorador de Imágenes',
+    links: [
+      { tipo: 'web', label: 'Sentinel-2 Explorer', url: 'https://livingatlas.arcgis.com/sentinel2explorer/#mapCenter=-69.28113%2C-35.55360%2C5.195&mode=find+a+scene&mainScene=2025-04-12%7CNatural+Color+for+Visualization%7C41411138' }
+    ],
+    desc: 'Aplicativo basado en Sentinel-2 que permite explorar y analizar imágenes satelitales históricas y recientes, útil para monitoreo y análisis SIG.',
+    tags: ['Sentinel-2', 'Living Atlas'],
+    img: 'image2/explorador.png'
+  }
+];
 
-  switch(opcion) {
-    case 'loica':
-      titulo = 'Proyecto Loica Portezuelo';
-      contenido = `
-        <a href="https://experience.arcgis.com/experience/63b92e386bc042feaffc945ecd0d0bd2" target="_blank">Aplicativo Web Completo</a>
-        <a href="https://experience.arcgis.com/experience/9edc1cf65df04b5fa3a0f5f81859fda9" target="_blank">Aplicativo Web para Editar</a>
-        <a href="https://www.arcgis.com/apps/dashboards/82fb3d1991fa4d45854a7eafacb90bf7" target="_blank">Visualizador o Cuadro de Mando</a>`;
-      descripcion = 'Aplicativo SIG que centraliza toda la información territorial y predial del proyecto Loica Portezuelo. Permite visualizar infraestructura, predios y servidumbres, editar atributos y analizar avances mediante un cuadro de mando.';
-      imagen = 'image2/loica.png';
-      break;
+/* =====================================================================
+   MESA DE INCIDENTES · Agregar UNA línea por reunión.
+   fecha: 'AAAA-MM-DD' · tipo: 'G1' | 'G2'
+   storymap: link al StoryMap de la reunión · minuta: link al PDF en SharePoint
+   Si un link queda vacío ('') se muestra como "Pendiente".
+   El agrupamiento por año y mes es automático.
+   ===================================================================== */
+const MESA = {
+  desc: 'Registro histórico de las reuniones de la Mesa de Incidentes (instancias gerenciales G1 y G2). Por cada sesión se publica un StoryMap con el estado territorial de los incidentes y una minuta en PDF almacenada en SharePoint.',
+  carpetaMinutas: '',   // Link a la biblioteca SharePoint de minutas (opcional)
+  reuniones: [
+    // TODO: reemplazar con las fechas y links reales de cada sesión
+    { fecha: '2026-11-12', tipo: 'G1', storymap: '', minuta: '' },
+    { fecha: '2026-11-05', tipo: 'G2', storymap: '', minuta: '' },
+    { fecha: '2026-10-15', tipo: 'G1', storymap: '', minuta: '' },
+    { fecha: '2026-10-08', tipo: 'G2', storymap: '', minuta: '' },
+    { fecha: '2026-09-17', tipo: 'G1', storymap: '', minuta: '' }
+  ]
+};
+const TIPOS_MESA = { G1: 'Reunión Gerencial G1', G2: 'Reunión Gerencial G2' };
 
-    case 'cuatrovientos':
-      titulo = 'Proyecto Cuatro Viento';
-      contenido = `
-        <a href="https://experience.arcgis.com/experience/7ac34be3b87f4417a94b4f380e759fd6" target="_blank">Aplicativo Web Completo</a>
-        <a href="https://experience.arcgis.com/experience/8d70ffde1d194cd6a274738bd24c36c1" target="_blank">Aplicativo Web para Editar</a>
-        <a href="https://www.arcgis.com/apps/dashboards/55d9d5da3b784578b79729f9a09bebf6" target="_blank">Visualizador o Cuadro de Mando</a>`;
-      descripcion = 'Plataforma web que gestiona los datos territoriales del proyecto Cuatro Viento. Permite consultar y editar información de terrenos y servidumbres, y supervisar avances mediante dashboards.';
-      imagen = 'image2/cuatrovientos.png';
-      break;
+/* ============================== ICONOS ============================== */
+const P = {
+  search:   '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  menu:     '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  chev:     '<path d="m9 6 6 6-6 6"/>',
+  ext:      '<path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/>',
+  pin:      '<path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  map:      '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/>',
+  target:   '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8"/>',
+  key:      '<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/>',
+  pick:     '<path d="M3 21 13 11M14.5 3.5C11 3 7 4.5 5 7c3-1 6.5-.5 9 2s3 6 2 9c2.5-2 4-6 3.5-9.5Z"/>',
+  check:    '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+  layers:   '<path d="m12 3 9 5-9 5-9-5Z"/><path d="m3 13 9 5 9-5"/>',
+  calendar: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  alert:    '<path d="M12 4 2.5 20h19Z"/><path d="M12 10v4M12 17h.01"/>',
+  list:     '<path d="M9 6h11M9 12h11M9 18h11"/><path d="m3.5 6 1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2"/>',
+  stack:    '<rect x="4" y="4" width="16" height="5" rx="1.5"/><rect x="4" y="11" width="16" height="5" rx="1.5"/><path d="M8 20h8M12 16v4"/>',
+  satellite:'<rect x="9" y="9" width="6" height="6" rx="1" transform="rotate(45 12 12)"/><path d="m4 4 4 4M16 16l4 4M15 4.5a5 5 0 0 1 4.5 4.5M15 1.5a8 8 0 0 1 7.5 7.5"/>',
+  app:      '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>',
+  editar:   '<path d="M4 20h4L19 9l-4-4L4 16Z"/><path d="m13.5 6.5 4 4"/>',
+  dashboard:'<path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
+  carpeta:  '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>',
+  powerapps:'<path d="m5 4 14 8-14 8Z"/>',
+  powerbi:  '<rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="12" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/>',
+  web:      '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  story:    '<path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2Z"/><path d="M4 20a2 2 0 0 0 2 2h13v-4"/>',
+  pdf:      '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  zoom:     '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/>',
+  home:     '<path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/>'
+};
+const ico = (n, cls = 'ico') =>
+  `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || P.app}</svg>`;
 
-    case 'arriendo':
-      titulo = 'Aplicativo SIG de Arriendo';
-      contenido = `
-        <a href="https://experience.arcgis.com/experience/fc133609fa6f41b1a52004826dc7b9fa" target="_blank">Editor Web de BBDD Arriendos</a>
-        <a href="https://colbun.maps.arcgis.com/apps/dashboards/7d79241a12d14be3a58516c4a5ad08d4" target="_blank">Visualizador</a>`;
-      descripcion = 'Herramienta de gestión de arriendos georreferenciados. Permite editar y mantener actualizada la base de datos de arriendos, consultar ubicaciones y estado de contratos.';
-      imagen = 'image2/arriendo.png';
-      break;
+const TIPO_LINK = {
+  app: 'ArcGIS Experience', editar: 'Edición de datos', dashboard: 'ArcGIS Dashboard',
+  carpeta: 'SharePoint', powerapps: 'Microsoft Power Apps', powerbi: 'Microsoft Power BI', web: 'Aplicación web'
+};
 
-    case 'concesiones':
-      titulo = 'Aplicativo SIG de Concesiones Mineras';
-      contenido = `
-        <a href="https://gis.colbunsa.cl/portal/apps/dashboards/23e4f3fb32d2483db8f7c9b82a3c96f4" target="_blank">Visualizador de Concesiones Mineras</a>`;
-      descripcion = 'Aplicativo SIG que consolida la información geográfica de las concesiones mineras pertenecientes al patrimonio de Colbún. Permite visualizar los polígonos asociados a permisos y concesiones mineras vigentes, de acuerdo con la normativa chilena, facilitando el seguimiento y gestión de estos derechos dentro del territorio nacional.';
-      imagen = 'image2/Concesiones_V2.png';
-      break;
+/* ============================ UTILIDADES ============================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const DIAS  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const parseFecha = f => { const [y, m, d] = f.split('-').map(Number); return new Date(y, m - 1, d); };
 
-    case 'patrimonio':
-      titulo = 'Revisión BBDD de Patrimonio 2026';
-      contenido = `
-        <a href="https://colbun.maps.arcgis.com/apps/dashboards/aa468373a64142ab8b4f165044f5ea23#" target="_blank">Visualizador</a>
-        <a href="https://colbun.sharepoint.com/sites/SPCTC_EC/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FSPCTC%5FEC%2FDocumentos%20compartidos%2FDocumentaci%C3%B3n%20GIS%2FBBDD%5FPATRIMONIO%5FCOLBUN%5FDOCUEMNTOS%5FLEGALES&p=true" target="_blank">📁 Documentos Legales (SharePoint)</a>`;
-      descripcion = 'El Control de Revisión BBDD de Patrimonio es una plataforma de seguimiento que centraliza el estado de avance de la revisión de los antecedentes geográficos y legales de los predios corporativos. Permite visualizar el progreso por central, identificar registros pendientes, controlar observaciones detectadas durante el proceso de validación y acceder rápidamente a la documentación de respaldo asociada a cada predio.<br><br>La herramienta proporciona trazabilidad del proceso de actualización de la Base de Datos GIS, facilitando la supervisión del cumplimiento de los hitos de revisión y garantizando la calidad de la información patrimonial antes de su incorporación definitiva al repositorio corporativo.';
-      imagen = 'image2/Revision_BBDD.png';
-      break;
+/* ============================ NAVEGACIÓN ============================ */
+function renderNav(filtro = '') {
+  const q = norm(filtro.trim());
+  const html = GRUPOS.map(g => {
+    const items = APPS.filter(a => a.grupo === g.id &&
+      (!q || norm(a.titulo + ' ' + (a.tags || []).join(' ') + ' ' + (a.desc || '')).includes(q)));
+    if (!items.length) return '';
+    return `<div class="sb-group"><p class="sb-group-title">${g.titulo}</p>${items.map(a => `
+      <button class="sb-item" data-id="${a.id}" title="${esc(a.titulo)}">
+        ${ico(a.icono)}<span class="lbl">${esc(a.titulo)}</span>${a.badge ? `<span class="sb-badge">${a.badge}</span>` : ''}
+      </button>`).join('')}</div>`;
+  }).join('');
+  $('#nav').innerHTML = html || '<div class="sb-empty">Sin resultados para la búsqueda.</div>';
+  marcarActivo();
+}
+function marcarActivo() {
+  document.querySelectorAll('.sb-item').forEach(b =>
+    b.dataset.id === estado.id ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+}
 
-    case 'terreno':
-      titulo = 'Aplicativo Portal de Terrenos y Servidumbres';
-      contenido = `
-        <a href="https://experience.arcgis.com/experience/f1eac2ac84b84012b447bdd0e3f5e4ad" target="_blank">Aplicativo Web Actual</a>
-        <a href="https://experience.arcgis.com/experience/f79cfa2f21dd4b92b469478de6a55663" target="_blank">Aplicativo Web Beta</a>`;
-      descripcion = 'Portal corporativo que consolida la información de terrenos y servidumbres. Permite consultar capas geográficas integradas con bases legales y técnicas.';
-      imagen = 'image2/terreno.png';
-      break;
+const estado = { id: null, filtroMesa: 'todas', aniosAbiertos: new Set([String(new Date().getFullYear())]) };
 
-    case 'arquitectura':
-      titulo = 'Arquitectura SIG';
-      contenido = `
-        <a href="https://gis.colbunsa.cl/portal/apps/sites/#/geportal-patrimonio" target="_blank">Geoportal versión Beta</a>`;
-      descripcion = 'Geoportal institucional que centraliza los recursos, aplicaciones y servicios geoespaciales de la Subgerencia de Gestión de Patrimonio. Permite acceso unificado a aplicativos y servicios SIG.';
-      imagen = 'image2/arquitectura.png';
-      break;
+function ir(id, { push = true } = {}) {
+  const app = APPS.find(a => a.id === id) || APPS[0];
+  estado.id = app.id;
+  if (push && location.hash !== '#' + app.id) history.replaceState(null, '', '#' + app.id);
+  const grupo = GRUPOS.find(g => g.id === app.grupo);
+  $('#crumbs').innerHTML = `${ico('home')}<span>${grupo.titulo}</span>${ico('chev')}<strong>${esc(app.titulo)}</strong>`;
+  $('#view').innerHTML = `<div class="view-inner">${app.especial === 'mesa' ? vistaMesa(app) : vistaApp(app, grupo)}</div>`;
+  $('#view').scrollTop = 0;
+  marcarActivo();
+  $('#sig-app').classList.remove('nav-open');
+  const img = $('#view .preview-img img');
+  if (img) (img.complete ? img.classList.add('ok') : img.addEventListener('load', () => img.classList.add('ok')));
+}
 
-    case 'explorador':
-      titulo = 'Explorador de Imágenes';
-      contenido = `
-        <a href="https://livingatlas.arcgis.com/sentinel2explorer/#mapCenter=-69.28113%2C-35.55360%2C5.195&mode=find+a+scene&mainScene=2025-04-12%7CNatural+Color+for+Visualization%7C41411138" target="_blank">Aplicativo Web</a>`;
-      descripcion = 'Aplicativo basado en Sentinel-2 que permite explorar y analizar imágenes satelitales históricas y recientes, útil para monitoreo y análisis SIG.';
-      imagen = 'image2/explorador.png';
-      break;
+/* ========================== VISTA APLICATIVO ========================== */
+function vistaApp(a, g) {
+  const links = a.links.map(l => `
+    <a class="lnk" data-tipo="${l.tipo}" href="${esc(l.url)}" target="_blank" rel="noopener">
+      <span class="lnk-ico">${ico(l.tipo)}</span>
+      <span class="lnk-txt"><b>${esc(l.label)}</b><span>${TIPO_LINK[l.tipo] || 'Enlace'}</span></span>
+      <span class="lnk-go">${ico('ext')}</span>
+    </a>`).join('');
+  const parrafos = a.desc.split('\n\n').map(p => `<p>${esc(p)}</p>`).join('');
+  return `
+    <div class="page-head">
+      <span class="eyebrow">${ico(a.icono)} ${g.titulo}</span>
+      <h2>${esc(a.titulo)}</h2>
+      ${a.subtitulo ? `<div style="color:var(--texto-suave);margin-top:4px">${esc(a.subtitulo)}</div>` : ''}
+    </div>
+    <div class="app-grid">
+      <div class="col">
+        <section class="card card-pad"><h3>Accesos</h3><div class="links">${links}</div></section>
+        <section class="card card-pad"><h3>Descripción</h3><div class="desc">${parrafos}</div>
+          ${a.tags ? `<div class="tags">${a.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+        </section>
+      </div>
+      <div class="col">
+        <section class="card preview">
+          <div class="preview-head"><h3>Vista previa</h3><div class="dots"><i></i><i></i><i></i></div></div>
+          <button class="preview-img" data-zoom="${esc(a.img)}" aria-label="Ampliar imagen">
+            <img src="${esc(a.img)}" alt="${esc(a.titulo)}" decoding="async">
+            <span class="zoom-hint">${ico('zoom')} Ampliar</span>
+          </button>
+        </section>
+      </div>
+    </div>`;
+}
 
-    case 'mariaelena':
-      titulo = 'Catastro Territorial María Elena - Inti Pacha';
-      contenido = `
-        <a href="https://colbun.maps.arcgis.com/apps/dashboards/7d618900f4694a43b7d381f4a7a86c9b" target="_blank">Visualizador</a>`;
-      descripcion = 'Dashboard interactivo del Catastro Territorial Avanzado para los trazados LAT Inti Pacha - S/E Crucero e Inti Pacha - S/E Kimal, comuna de María Elena, Región de Antofagasta. Incluye 70 eventos territoriales: servidumbres inscritas, líneas de transmisión eléctrica, concesiones eléctricas, proyectos ingresados al SEA, actos administrativos de Bienes Nacionales y propiedad superficial. Estudio elaborado por Andes Datatec, mayo 2026. Subgerencia de Gestión de Patrimonio, Colbún S.A.';
-      imagen = 'image2/Catastro_inti.png';
-      break;
+/* ======================= VISTA MESA DE INCIDENTES ======================= */
+function accion(url, tipo) {
+  const lbl = tipo === 'story' ? 'StoryMap' : 'Minuta PDF';
+  const ic = tipo === 'story' ? 'story' : 'pdf';
+  return url
+    ? `<a class="act ${tipo}" href="${esc(url)}" target="_blank" rel="noopener">${ico(ic)} ${lbl}</a>`
+    : `<span class="act off" title="Link aún no cargado">${ico(ic)} ${lbl} · Pendiente</span>`;
+}
 
-    case 'planexpansion':
-      titulo = 'Visor de Análisis Territorial – Plan de Expansión TX (Cambrales · La Calle)';
-      contenido = `
-        <a href="https://experience.arcgis.com/experience/4737c661ad914a8891a2bd0cb8b4a3d1" target="_blank">Aplicativo Web</a>`;
-      descripcion = 'Visor GIS interno de Colbún diseñado para evaluar y seleccionar terrenos candidatos para las subestaciones Cambrales y La Calle dentro del Plan de Expansión de Transmisión 2026. Permite analizar información territorial, restricciones, oportunidades y antecedentes relevantes para apoyar la toma de decisiones en etapas tempranas del proyecto.';
-      imagen = 'image2/Plan_Expansion.png';
-      break;
+function vistaMesa(a) {
+  const todas = [...MESA.reuniones].sort((x, y) => y.fecha.localeCompare(x.fecha));
+  const lista = estado.filtroMesa === 'todas' ? todas : todas.filter(r => r.tipo === estado.filtroMesa);
+  const anioActual = String(new Date().getFullYear());
+  const delAnio = todas.filter(r => r.fecha.startsWith(anioActual));
+  const nStory = todas.filter(r => r.storymap).length;
+  const nMin = todas.filter(r => r.minuta).length;
+  const ultima = todas[0];
 
-    case 'tareas_sgp':
-      titulo = 'Gestión de Tareas SGP Incidentes';
-      contenido = `
-        <a href="https://experience.arcgis.com/experience/42969c86dc8d44ed98235c430081f434/page/Gesti%C3%B3n-y-Avances" target="_blank">Aplicativo Web (Gestión y Avances)</a>`;
-      descripcion = 'El aplicativo Gestión de Tareas SGP Incidentes es una herramienta interna desarrollada para la Subgerencia de Gestión de Patrimonio (SGP) de Colbún, cuyo objetivo es registrar, gestionar, monitorear y dar seguimiento a incidentes territoriales asociados a las centrales de la compañía. Este sistema integra capacidades de visualización geográfica, gestión de datos y seguimiento de actividades, permitiendo centralizar la información en un solo entorno accesible para el equipo.';
-      imagen = 'image2/APP_Tareas_incidencias_SGP.png';
-      break;
+  // Agrupa año → mes
+  const arbol = {};
+  lista.forEach(r => {
+    const [y, m] = r.fecha.split('-');
+    ((arbol[y] ??= {})[m] ??= []).push(r);
+  });
 
-    case 'control_tareas_sgp':
-      titulo = 'Control de Tareas SGP';
-      contenido = `
-        <a href="https://apps.powerapps.com/play/e/default-f402c82d-b1a3-4983-a2cc-d490bb898cb6/a/dce5dcec-7f78-4dd2-b84f-4e1671d73eab?tenantId=f402c82d-b1a3-4983-a2cc-d490bb898cb6" target="_blank">🎯 Abrir Power App</a>
-        <a href="https://app.powerbi.com/links/b-0rJ3qcBV?ctid=f402c82d-b1a3-4983-a2cc-d490bb898cb6&pbi_source=linkShare&bookmarkGuid=aa5757d3-619b-4c0b-b73f-d864c8c3737d" target="_blank">📊 Dashboard Power BI</a>`;
-      descripcion = 'Sistema Control de Tareas SGP - la solución integral del equipo de Terrenos y Concesiones. Gestiona todo el ciclo de tareas: asignación, seguimiento, aprobación y cierre, con bitácora personal por tarea, generación de PDF profesional, notificaciones inteligentes y dashboard analítico.';
-      imagen = 'image2/control_tareas_sgp.png';
-      break;
+  const anios = Object.keys(arbol).sort().reverse().map(y => {
+    const abierto = estado.aniosAbiertos.has(y);
+    const total = Object.values(arbol[y]).flat().length;
+    const meses = Object.keys(arbol[y]).sort().reverse().map(m => {
+      const rs = arbol[y][m];
+      return `<div class="month">
+        <div class="month-head"><b>${MESES[+m - 1]}</b><span>${rs.length} ${rs.length > 1 ? 'reuniones' : 'reunión'}</span><hr></div>
+        ${rs.map(r => {
+          const d = parseFecha(r.fecha);
+          return `<div class="meet">
+            <div class="date"><span class="d-m">${MESES[d.getMonth()].slice(0, 3)}</span><span class="d-d">${d.getDate()}</span></div>
+            <div class="m-info">
+              <div class="m-title"><b>${TIPOS_MESA[r.tipo] || 'Reunión'}</b><span class="pill ${r.tipo}">${r.tipo}</span></div>
+              <div class="m-sub">${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}</div>
+            </div>
+            <div class="m-actions">${accion(r.storymap, 'story')}${accion(r.minuta, 'pdf')}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('');
+    return `<div class="year">
+      <button class="year-head" data-anio="${y}" aria-expanded="${abierto}">
+        ${ico('chev', 'ico chev')}<span class="y-title">Mesa de Incidentes · ${y}</span>
+        <span class="y-count">${total} ${total > 1 ? 'reuniones' : 'reunión'}</span>
+      </button>
+      <div class="year-body" ${abierto ? '' : 'hidden'}>${meses}</div>
+    </div>`;
+  }).join('');
+
+  const seg = ['todas', 'G1', 'G2'].map(f =>
+    `<button data-filtro="${f}" aria-pressed="${estado.filtroMesa === f}">${f === 'todas' ? 'Todas' : f}</button>`).join('');
+
+  let ultimaHtml = '';
+  if (ultima) {
+    const d = parseFecha(ultima.fecha);
+    ultimaHtml = `<section class="card last">
+      <span class="eyebrow">${ico('calendar')} Última reunión</span>
+      <div class="l-date">${d.getDate()} de ${MESES[d.getMonth()]} ${d.getFullYear()}</div>
+      <div class="l-sub">${TIPOS_MESA[ultima.tipo]}</div>
+      <div class="m-actions">${accion(ultima.storymap, 'story')}${accion(ultima.minuta, 'pdf')}</div>
+    </section>`;
   }
 
-  const sub = document.getElementById('submenu');
-  const img = document.getElementById('imagen');
-
-  sub.innerHTML = `<h3>${titulo}</h3>${contenido}<div id='descripcion' class='descripcion'>${descripcion}</div>`;
-  img.innerHTML = `<h3>${titulo}</h3><img src='${imagen}' alt='${titulo}'>`;
-
-  setTimeout(() => {
-    document.getElementById('descripcion').classList.add('visible');
-    document.querySelector('.imagen img').classList.add('visible');
-  }, 10);
+  return `
+    <div class="page-head">
+      <span class="eyebrow">${ico('calendar')} Incidentes y Tareas</span>
+      <h2>${esc(a.titulo)}</h2>
+    </div>
+    <div class="kpis">
+      <div class="card kpi"><div class="k-lbl">Reuniones ${anioActual}</div><div class="k-val">${delAnio.length}</div><div class="k-sub">${delAnio.filter(r=>r.tipo==='G1').length} G1 · ${delAnio.filter(r=>r.tipo==='G2').length} G2</div></div>
+      <div class="card kpi"><div class="k-lbl">StoryMaps publicados</div><div class="k-val">${nStory}<span style="font-size:15px;color:var(--texto-suave)"> / ${todas.length}</span></div><div class="k-sub">Uno por sesión</div></div>
+      <div class="card kpi"><div class="k-lbl">Minutas en SharePoint</div><div class="k-val">${nMin}<span style="font-size:15px;color:var(--texto-suave)"> / ${todas.length}</span></div><div class="k-sub">Formato PDF</div></div>
+      <div class="card kpi"><div class="k-lbl">Histórico</div><div class="k-val">${todas.length}</div><div class="k-sub">${new Set(todas.map(r=>r.fecha.slice(0,4))).size} año(s) registrados</div></div>
+    </div>
+    <div class="mesa-grid">
+      <section>
+        <div class="toolbar"><h3 style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--texto-suave)">Reuniones por año</h3><div class="seg" role="group" aria-label="Filtrar por tipo">${seg}</div></div>
+        ${anios || '<div class="card empty-state">No hay reuniones registradas para este filtro.</div>'}
+      </section>
+      <aside class="side-stack">
+        ${ultimaHtml}
+        <section class="card card-pad">
+          <h3>Acerca de la mesa</h3>
+          <div class="desc"><p>${esc(MESA.desc)}</p></div>
+        </section>
+        <section class="card card-pad">
+          <h3>Flujo por sesión</h3>
+          <ol class="flow">
+            <li><span class="n">1</span><div><b>Reunión G1 / G2</b><span>Una o dos sesiones gerenciales al mes</span></div></li>
+            <li><span class="n">2</span><div><b>StoryMap</b><span>Estado territorial de incidentes</span></div></li>
+            <li><span class="n">3</span><div><b>Minuta PDF</b><span>Generada y almacenada en SharePoint</span></div></li>
+          </ol>
+          ${MESA.carpetaMinutas ? `<a class="lnk" data-tipo="carpeta" href="${esc(MESA.carpetaMinutas)}" target="_blank" rel="noopener" style="margin-top:6px">
+            <span class="lnk-ico">${ico('carpeta')}</span><span class="lnk-txt"><b>Biblioteca de minutas</b><span>SharePoint</span></span><span class="lnk-go">${ico('ext')}</span></a>` : ''}
+        </section>
+        <section class="card card-pad">
+          <h3>Relacionado</h3>
+          <div class="links">
+            <a class="lnk" data-tipo="app" href="#tareas_sgp" target="_self" data-ir="tareas_sgp">
+              <span class="lnk-ico">${ico('alert')}</span><span class="lnk-txt"><b>Gestión de Tareas SGP Incidentes</b><span>Ver en el portal</span></span><span class="lnk-go">${ico('chev')}</span>
+            </a>
+          </div>
+        </section>
+      </aside>
+    </div>`;
 }
-</script>
 
+/* ============================== EVENTOS ============================== */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const nav = t.closest('.sb-item');
+  if (nav) return ir(nav.dataset.id);
+
+  const rel = t.closest('[data-ir]');
+  if (rel) { e.preventDefault(); return ir(rel.dataset.ir); }
+
+  const yh = t.closest('.year-head');
+  if (yh) {
+    const y = yh.dataset.anio, body = yh.nextElementSibling, abrir = body.hidden;
+    body.hidden = !abrir; yh.setAttribute('aria-expanded', abrir);
+    abrir ? estado.aniosAbiertos.add(y) : estado.aniosAbiertos.delete(y);
+    return;
+  }
+
+  const f = t.closest('[data-filtro]');
+  if (f) { estado.filtroMesa = f.dataset.filtro; return ir(estado.id, { push: false }); }
+
+  const z = t.closest('[data-zoom]');
+  if (z) { const lb = $('#lightbox'); lb.querySelector('img').src = z.dataset.zoom; lb.classList.add('open'); return; }
+
+  if (t.closest('#lightbox')) return $('#lightbox').classList.remove('open');
+  if (t.closest('#menuBtn')) return $('#sig-app').classList.add('nav-open');
+  if (t.closest('#scrim')) return $('#sig-app').classList.remove('nav-open');
+});
+
+$('#q').addEventListener('input', e => renderNav(e.target.value));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { $('#lightbox').classList.remove('open'); $('#sig-app').classList.remove('nav-open'); }
+  if (e.key === '/' && document.activeElement !== $('#q')) { e.preventDefault(); $('#q').focus(); }
+});
+window.addEventListener('hashchange', () => ir(location.hash.slice(1), { push: false }));
+
+/* ============================== INICIO ============================== */
+document.querySelectorAll('[data-icon]').forEach(el => el.innerHTML = ico(el.dataset.icon));
+$('#anio').textContent = new Date().getFullYear();
+renderNav();
+ir(location.hash.slice(1) || APPS[0].id, { push: false });
+</script>
 </body>
 </html>
