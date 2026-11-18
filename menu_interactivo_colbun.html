@@ -211,6 +211,59 @@ html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: 
 #sig-app .preview-img:hover .zoom-hint { opacity: 1; }
 
 /* Lightbox */
+/* Panel lateral: Manuales y flujo */
+.dw-scrim { position: fixed; inset: 0; background: rgba(8,18,28,.45); z-index: 60; display: none; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(620px, 100vw); z-index: 61;
+  background: var(--superficie); box-shadow: -10px 0 40px rgba(8,18,28,.25);
+  display: flex; flex-direction: column; transform: translateX(100%); transition: transform .28s ease; visibility: hidden;
+}
+#sig-app.drawer-open .drawer { transform: none; visibility: visible; }
+#sig-app.drawer-open .dw-scrim { display: block; }
+.dw-head { padding: 20px 24px 0; border-bottom: 1px solid var(--borde); }
+.dw-top { display: flex; align-items: flex-start; gap: 12px; }
+.dw-top h2 { margin: 4px 0 0; font-size: 20px; color: var(--tinta); font-weight: 650; }
+.dw-top p { margin: 4px 0 0; font-size: 13px; color: var(--texto-suave); }
+#sig-app .dw-close { margin-left: auto; padding: 6px; border-radius: 6px; cursor: pointer; color: var(--texto-suave); }
+#sig-app .dw-close:hover { background: var(--fondo); color: var(--tinta); }
+#sig-app .dw-close .ico { width: 20px; height: 20px; }
+.dw-tabs { display: flex; gap: 22px; margin-top: 16px; }
+#sig-app .dw-tab { padding: 10px 0; font-size: 13.5px; font-weight: 600; color: var(--texto-suave); cursor: pointer;
+  border-bottom: 2px solid transparent; display: inline-flex; align-items: center; gap: 7px; }
+#sig-app .dw-tab[aria-selected="true"] { color: var(--azul); border-bottom-color: var(--azul); }
+.dw-body { flex: 1; overflow-y: auto; padding: 22px 24px 30px; }
+.dw-body [hidden] { display: none !important; }
+.callout { display: flex; gap: 10px; padding: 12px 14px; border-radius: 8px; background: var(--ambar-50);
+  border-left: 3px solid var(--ambar); font-size: 13px; color: var(--tinta); line-height: 1.55; margin-bottom: 20px; }
+.callout .ico { color: var(--ambar); margin-top: 2px; }
+.fases { list-style: none; margin: 0; padding: 0; }
+.fase { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 14px; position: relative; padding-bottom: 18px; }
+.fase:not(:last-child)::after { content: ""; position: absolute; left: 16px; top: 36px; bottom: 4px; width: 2px; background: var(--borde); }
+.fase .num { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px;
+  background: var(--azul); color: #fff; box-shadow: 0 0 0 4px var(--azul-50); }
+.fase-t { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fase-t b { font-size: 14.5px; color: var(--tinta); }
+.rol { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: var(--fondo); border: 1px solid var(--borde); color: var(--texto); }
+.fase p { margin: 6px 0 0; font-size: 13px; line-height: 1.6; color: var(--texto); }
+.fase .ctl { display: flex; gap: 6px; margin-top: 6px; font-size: 12.5px; color: var(--verde-700); line-height: 1.5; }
+.fase .ctl .ico { width: 14px; height: 14px; margin-top: 3px; }
+#sig-app .fase a.app-ref { display: inline-flex; cursor: pointer; text-decoration: none; align-items: center; gap: 5px; margin-top: 6px; font-size: 12px; color: var(--azul); font-weight: 600; }
+#sig-app .fase a.app-ref:hover { text-decoration: underline; }
+.fase .app-ref .ico { width: 13px; height: 13px; }
+.exc { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+.exc th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--texto-suave); padding: 8px 10px; border-bottom: 1px solid var(--borde); }
+.exc td { padding: 9px 10px; border-bottom: 1px solid var(--borde); vertical-align: top; line-height: 1.5; }
+.exc td:first-child { font-weight: 600; color: var(--tinta); width: 34%; }
+.dw-sub { font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--texto-suave); margin: 26px 0 10px; }
+.doc-cards { display: flex; flex-direction: column; gap: 10px; }
+#sig-app div.lnk { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 9px;
+  border: 1px dashed var(--borde); background: var(--superficie); opacity: .8; }
+#sig-app .btn-manual { display: inline-flex !important; align-items: center; gap: 8px; padding: 9px 16px !important; border-radius: 8px;
+  background: var(--superficie) !important; border: 1px solid var(--borde) !important; color: var(--azul) !important;
+  font-weight: 600; font-size: 13.5px; cursor: pointer; box-shadow: var(--sombra-sm); transition: border-color .15s, box-shadow .15s; white-space: nowrap; }
+#sig-app .btn-manual:hover { border-color: var(--azul) !important; box-shadow: var(--sombra-md); }
+#sig-app .btn-manual.full { width: 100%; justify-content: center; margin-bottom: 12px; }
+.head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .lightbox {
   position: fixed; inset: 0; background: rgba(8,18,28,.88); z-index: 50;
   display: none; align-items: center; justify-content: center; padding: 40px; cursor: zoom-out;
@@ -393,6 +446,28 @@ html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: 
     </header>
     <div class="view" id="view"></div>
   </main>
+
+  <div class="dw-scrim" id="dwScrim"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="dwTitle">
+    <div class="dw-head">
+      <div class="dw-top">
+        <div>
+          <span class="eyebrow">Mesa de Incidentes del Patrimonio</span>
+          <h2 id="dwTitle">Manuales y flujo del proceso</h2>
+          <p>De la preparación de los casos al envío de la minuta FINAL.</p>
+        </div>
+        <button class="dw-close" aria-label="Cerrar" data-icon="close"></button>
+      </div>
+      <div class="dw-tabs" role="tablist">
+        <button class="dw-tab" role="tab" data-tab="flujo" aria-selected="true">Cómo funciona</button>
+        <button class="dw-tab" role="tab" data-tab="docs" aria-selected="false">Documentos</button>
+      </div>
+    </div>
+    <div class="dw-body">
+      <div id="dwFlujo" role="tabpanel"></div>
+      <div id="dwDocs" role="tabpanel" hidden></div>
+    </div>
+  </aside>
 
   <div class="lightbox" id="lightbox" role="dialog" aria-label="Vista ampliada"><img alt=""></div>
 </div>
@@ -589,18 +664,62 @@ const MESA = {
     }
   ],
 
-  // Documentación del proceso (subir a SharePoint y pegar aquí el link)
+  // Carpeta SharePoint con la documentación del proceso
+  carpetaDocumentos: 'https://colbun.sharepoint.com/sites/SPCTC_EC/Documentos%20compartidos/Documentaci%C3%B3n%20GIS/Mesa%20de%20Incidentes/Documentaci%C3%B3n%20del%20proceso',
+
+  // Documentos del proceso (url vacía = "Pendiente")
   documentos: [
-    { label: 'Procedimiento Integral de Operación', url: '' },
-    { label: 'Manual de Usuario',                   url: '' },
-    { label: 'Manual Técnico',                      url: '' },
-    { label: 'Presentación del flujo',              url: '' }
+    { label: 'Procedimiento Integral de Operación', detalle: 'Paso a paso, roles, RACI y checklist maestro', tipo: 'Word', url: '' },
+    { label: 'Manual de Usuario',                   detalle: 'Operación de la Power App: asistentes, minuta y envío', tipo: 'Word', url: '' },
+    { label: 'Manual Técnico',                      detalle: 'Arquitectura, modelo de datos, flujos y soporte', tipo: 'Word', url: '' },
+    { label: 'Presentación del flujo',              detalle: 'Resumen ejecutivo del proceso', tipo: 'PowerPoint', url: '' }
   ],
   reuniones: [
     { fecha: '2026-11-12', tipo: 'G2', storymap: 'https://storymaps.arcgis.com/stories/878a40be2e714cdfbf3029f8706b0746', minuta: 'https://colbun.sharepoint.com/:b:/s/SPCTC_EC/IQBwggPsmfQgTY4slrYgoaS6AUNidUK8KKIIpQouzXFP8co?e=j36NSk' },
     { fecha: '2026-08-25', tipo: 'G1', storymap: 'https://storymaps.arcgis.com/stories/bdcf854681ee4bc7bb268f9ba1786ab8', minuta: 'https://colbun.sharepoint.com/:b:/s/SPCTC_EC/IQBsZK1N1d_sSb4xJVoyI7tKAScwVdmwZ8LlSdF84BRLREk?e=NeISCf' }
   ]
 };
+/* Resumen del Procedimiento Integral v1.0 (sin datos personales ni fórmulas internas) */
+const FASES_MESA = [
+  { n: 0, t: 'Preparación', rol: 'Operador · Revisor',
+    d: 'Definir fecha, alcance y responsable de la reunión. Identificar casos críticos, de seguimiento y nuevos. Comprobar accesos a Survey123, ArcGIS, SharePoint, Power App y Power Automate.',
+    c: 'No avanzar al cierre sin responsable de revisión ni modo de envío definido.' },
+  { n: 1, t: 'Preparar los datos de los casos', rol: 'Preparador de casos',
+    d: 'Registrar o consolidar cada caso en la fuente autorizada: identificador, título y descripción ejecutiva, fecha, central, zona, coordenadas WGS84, riesgo inmediato e involucrados.',
+    c: 'Identificador único, ubicación coherente y riesgo explícito.' },
+  { n: 2, t: 'Verificar la sincronización', rol: 'Administrador GIS',
+    d: 'Los ingresos pasan por una tabla intermedia. Un caso solo se considera integrado cuando su sincronización queda en estado OK; los errores se corrigen en origen sin duplicar filas.',
+    c: 'Contrastar una muestra contra ArcGIS antes de continuar.' },
+  { n: 3, t: 'Curar y asignar los casos', rol: 'Administrador GIS', app: 'gestion',
+    d: 'Revisar geometría y atributos, resolver duplicados, clasificar cada caso (crítico, seguimiento o nuevo) y asignar los casos que se expondrán en la sesión.',
+    c: 'Imágenes y referencias accesibles; casos marcados como listos.' },
+  { n: 4, t: 'Preparar la sesión', rol: 'Operador Power App', app: 'minutas',
+    d: 'Seleccionar la reunión o crear la sesión (una sola por reunión) y vincularla. Ejecutar la preparación de asistentes y comprobar encabezado y contadores.',
+    c: 'No crear una segunda sesión para corregir asistentes o regenerar el PDF.' },
+  { n: 5, t: 'Asistentes', rol: 'Operador Power App', app: 'minutas',
+    d: 'Revisar la propuesta de invitados, marcar solo la asistencia efectiva y completar correo, cargo y gerencia. Guardar asistentes.',
+    c: 'Pendientes = 0 y seleccionados coherentes con registrados.' },
+  { n: 6, t: 'Generar y revisar la minuta', rol: 'Operador · Revisor funcional', app: 'minutas',
+    d: 'Generar el PDF borrador y revisar portada, fecha, asistentes, casos, situación expuesta, acuerdos e imágenes. Si los datos fuente están mal, corregir en GIS y regenerar.',
+    c: 'La revisión es de contenido, no solo abrir el archivo.' },
+  { n: 7, t: 'Publicar la minuta FINAL', rol: 'Operador Power App', app: 'minutas',
+    d: 'Publicar el PDF generado o un PDF corregido. Ambos caminos terminan en un único Minuta_[SESIÓN]_FINAL.pdf en la biblioteca de Minutas Finales y la sesión registra el enlace definitivo.',
+    c: 'Abrir el enlace definitivo antes de enviar.' },
+  { n: 8, t: 'Enviar la minuta', rol: 'Operador · Aprobación del revisor', app: 'minutas',
+    d: 'Enviar con doble confirmación. El correo llega a los asistentes efectivos con enlace al PDF FINAL.',
+    c: 'Verificar el correo y que el enlace abra el FINAL.' },
+  { n: 9, t: 'Cierre y evidencia', rol: 'Operador · Soporte',
+    d: 'No regenerar después del envío. Confirmar consistencia entre GIS, SharePoint y correo, archivar evidencia y cargar el StoryMap y la minuta de la sesión en este portal.',
+    c: 'La mesa se cierra solo cuando todo es consistente.' }
+];
+const EXCEPCIONES_MESA = [
+  ['Caso duplicado', 'Resolver por identificador y estado; no crear un nuevo ID sin revisar.'],
+  ['Error de sincronización', 'Corregir la causa y reintentar una vez; no copiar manualmente a varias fuentes.'],
+  ['Datos incorrectos en la minuta', 'Corregir la fuente en GIS y regenerar; no editar solo el PDF.'],
+  ['FINAL incorrecto', 'Republicar la versión correcta y validar el enlace antes de enviar.'],
+  ['Correo sin destinatarios', 'Corregir asistencia y correos en GIS; no forzar correos manuales.'],
+  ['Duda de reenvío', 'Revisar historial y estado de envío antes de volver a pulsar.']
+];
 const TIPOS_MESA = { G1: 'Reunión Gerencial G1', G2: 'Reunión Gerencial G2' };
 
 /* ============================== ICONOS ============================== */
@@ -631,6 +750,7 @@ const P = {
   story:    '<path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2Z"/><path d="M4 20a2 2 0 0 0 2 2h13v-4"/>',
   pdf:      '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
   zoom:     '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/>',
+  close:    '<path d="M6 6l12 12M18 6 6 18"/>',
   home:     '<path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/>'
 };
 const ico = (n, cls = 'ico') =>
@@ -788,9 +908,12 @@ function vistaMesa(a) {
   }
 
   return `
-    <div class="page-head">
-      <span class="eyebrow">${ico('calendar')} Incidentes y Tareas</span>
-      <h2>${esc(a.titulo)}</h2>
+    <div class="page-head head-row">
+      <div>
+        <span class="eyebrow">${ico('calendar')} Incidentes y Tareas</span>
+        <h2>${esc(a.titulo)}</h2>
+      </div>
+      <button class="btn-manual" data-drawer="flujo">${ico('story')} Manuales y flujo</button>
     </div>
     <div class="kpis">
       <div class="card kpi"><div class="k-lbl">Reuniones ${anioActual}</div><div class="k-val">${delAnio.length}</div><div class="k-sub">${delAnio.filter(r=>r.tipo==='G1').length} G1 · ${delAnio.filter(r=>r.tipo==='G2').length} G2</div></div>
@@ -838,6 +961,7 @@ function vistaMesa(a) {
         </section>
         <section class="card card-pad">
           <h3>Documentación</h3>
+          <button class="btn-manual full" data-drawer="flujo">${ico('story')} Ver cómo funciona el proceso</button>
           <div class="docs">${MESA.documentos.map(d => d.url
             ? `<a class="doc" href="${esc(d.url)}" target="_blank" rel="noopener">${ico('pdf')} ${esc(d.label)}<small>Abrir</small></a>`
             : `<span class="doc" title="Documento aún no publicado">${ico('pdf')} ${esc(d.label)}<small>Pendiente</small></span>`).join('')}
@@ -853,6 +977,54 @@ function vistaMesa(a) {
         </section>
       </aside>
     </div>`;
+}
+
+/* ======================= PANEL MANUALES Y FLUJO ======================= */
+function docCard(d) {
+  const inner = `<span class="lnk-ico">${ico(d.tipo === 'PowerPoint' ? 'story' : 'pdf')}</span>
+    <span class="lnk-txt"><b>${esc(d.label)}</b><span>${esc(d.detalle)} · ${d.tipo}</span></span>`;
+  return d.url
+    ? `<a class="lnk" data-tipo="carpeta" href="${esc(d.url)}" target="_blank" rel="noopener">${inner}<span class="lnk-go">${ico('ext')}</span></a>`
+    : `<div class="lnk">${inner}<span class="rol">Pendiente</span></div>`;
+}
+function renderDrawer() {
+  const appUrl = k => (MESA.aplicativos[k === 'gestion' ? 0 : 2] || {});
+  const fases = FASES_MESA.map(f => {
+    const ap = f.app ? appUrl(f.app) : null;
+    return `<li class="fase"><span class="num">${f.n}</span><div>
+      <div class="fase-t"><b>${esc(f.t)}</b><span class="rol">${esc(f.rol)}</span></div>
+      <p>${esc(f.d)}</p>
+      <div class="ctl">${ico('check')}<span>${esc(f.c)}</span></div>
+      ${ap && ap.url ? `<a class="app-ref" href="${esc(ap.url)}" target="_blank" rel="noopener">${ico('ext')} ${esc(ap.titulo)}</a>` : ''}
+    </div></li>`;
+  }).join('');
+  $('#dwFlujo').innerHTML = `
+    <div class="callout">${ico('alert')}<div><b>Regla principal:</b> solo el archivo <b>Minuta_[SESIÓN]_FINAL.pdf</b> se distribuye. Generar o abrir un PDF no equivale a publicarlo, y un flujo exitoso no reemplaza la revisión humana.</div></div>
+    <ol class="fases">${fases}</ol>
+    <div class="dw-sub">Si algo falla</div>
+    <table class="exc"><thead><tr><th>Evento</th><th>Qué hacer</th></tr></thead>
+      <tbody>${EXCEPCIONES_MESA.map(([e, h]) => `<tr><td>${esc(e)}</td><td>${esc(h)}</td></tr>`).join('')}</tbody></table>`;
+  $('#dwDocs').innerHTML = `
+    <div class="doc-cards">${MESA.documentos.map(docCard).join('')}</div>
+    ${MESA.carpetaDocumentos ? `<div class="dw-sub">Carpeta</div><div class="doc-cards">
+      <a class="lnk" data-tipo="carpeta" href="${esc(MESA.carpetaDocumentos)}" target="_blank" rel="noopener">
+        <span class="lnk-ico">${ico('carpeta')}</span><span class="lnk-txt"><b>Documentación del proceso</b><span>SharePoint · Mesa de Incidentes</span></span><span class="lnk-go">${ico('ext')}</span></a></div>` : ''}
+    <div class="callout" style="margin-top:20px">${ico('alert')}<div>Los documentos se abren en SharePoint con tu cuenta Colbún. Son de uso interno.</div></div>`;
+}
+function abrirDrawer(tab = 'flujo') {
+  selTab(tab);
+  $('#sig-app').classList.add('drawer-open');
+  $('#drawer').setAttribute('aria-hidden', 'false');
+  setTimeout(() => $('#drawer .dw-close').focus(), 50);
+}
+function cerrarDrawer() {
+  $('#sig-app').classList.remove('drawer-open');
+  $('#drawer').setAttribute('aria-hidden', 'true');
+}
+function selTab(tab) {
+  document.querySelectorAll('.dw-tab').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === tab));
+  $('#dwFlujo').hidden = tab !== 'flujo';
+  $('#dwDocs').hidden = tab !== 'docs';
 }
 
 /* ============================== EVENTOS ============================== */
@@ -875,6 +1047,12 @@ document.addEventListener('click', e => {
   const f = t.closest('[data-filtro]');
   if (f) { estado.filtroMesa = f.dataset.filtro; return ir(estado.id, { push: false }); }
 
+  const dw = t.closest('[data-drawer]');
+  if (dw) return abrirDrawer(dw.dataset.drawer);
+  const tb = t.closest('.dw-tab');
+  if (tb) return selTab(tb.dataset.tab);
+  if (t.closest('.dw-close') || t.closest('#dwScrim')) return cerrarDrawer();
+
   const z = t.closest('[data-zoom]');
   if (z) { const lb = $('#lightbox'); lb.querySelector('img').src = z.dataset.zoom; lb.classList.add('open'); return; }
 
@@ -885,7 +1063,7 @@ document.addEventListener('click', e => {
 
 $('#q').addEventListener('input', e => renderNav(e.target.value));
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { $('#lightbox').classList.remove('open'); $('#sig-app').classList.remove('nav-open'); }
+  if (e.key === 'Escape') { $('#lightbox').classList.remove('open'); $('#sig-app').classList.remove('nav-open'); cerrarDrawer(); }
   if (e.key === '/' && document.activeElement !== $('#q')) { e.preventDefault(); $('#q').focus(); }
 });
 window.addEventListener('hashchange', () => ir(location.hash.slice(1), { push: false }));
@@ -894,6 +1072,7 @@ window.addEventListener('hashchange', () => ir(location.hash.slice(1), { push: f
 document.querySelectorAll('[data-icon]').forEach(el => el.innerHTML = ico(el.dataset.icon));
 $('#anio').textContent = new Date().getFullYear();
 renderNav();
+renderDrawer();
 ir(location.hash.slice(1) || APPS[0].id, { push: false });
 </script>
 </body>
